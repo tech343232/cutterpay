@@ -1,0 +1,10 @@
+{
+  "name": "CUTTERPAY",
+  "short_name": "CUTTERPAY",
+  "description": "Simulador de compra y venta de criptomonedas",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#0B0912",
+  "theme_color": "#0B0912",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

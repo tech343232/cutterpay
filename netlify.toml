@@ -1,0 +1,27 @@
+# CUTTERPAY en Netlify: frontend estático + API como función + base PostgreSQL (Netlify DB / Neon)
+
+[build]
+  command = "npm run build"
+  publish = "frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  # PGlite solo se usa en local: no se empaqueta en la función
+  external_node_modules = ["@electric-sql/pglite", "pg-native"]
+  included_files = ["backend/src/db/schema.sql"]
+
+# La API: /api/... → función "api"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# React Router: cualquier otra ruta abre la app
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
