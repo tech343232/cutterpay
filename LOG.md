@@ -31,6 +31,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Peticiones
 
+### 2026-11-03 · Código por correo para entrar y para mover dinero
+- Pedido: enviar un código al correo registrado para confirmar compras, ventas y retiros, y también al iniciar sesión (y verificar que el correo es real).
+- Entregado: códigos de 6 dígitos (hash, 10 min, 5 intentos, un solo uso, atados a la operación exacta) en registro, login, compra, venta, invertir y retirar; casillas que aceptan pegar el código y reenvío con espera de 30 s; correo con diseño de marca; tabla `codigos_verificacion` con migración automática (local y Neon); cuentas demo muestran su código en pantalla.
+- Pendiente: el usuario debe crear la contraseña de aplicación de Gmail y ponerla en Netlify.
+
 ### 2026-11-03 · Landing que convence + bienvenida con sonido
 - Pedido: titular «Haz crecer tu dinero así de sencillo»; quitar «simulador» donde no hace falta; ordenar el comparador; motion graphic CSS directo en la landing; destacar beneficios y mostrar el problema de las cuentas del banco (dinero estancado); sonido al entrar a CUTTERPAY.
 - Entregado: landing nueva (fondo animado, historia animada en el héroe con borde que gira, contador «desde que llegaste…», franja en movimiento, sección «tu dinero se está quedando dormido» con barras animadas, «despierta tu dinero» con beneficios y comparador, cómo funciona, cripto y cierre); comparador en 3 bloques (monto y plazo → resultado grande → CUTTERPAY / Banco tradicional); sonido de bienvenida + animación con logo, anillos y destellos al iniciar sesión o crear cuenta; textos sin «simulador/ficticio» (queda solo una nota corta en el pie).
@@ -52,6 +57,12 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Pendiente: nada.
 
 ## Errores
+
+### 2026-11-03 · Netlify · «Algo salió mal en el servidor» al crear la cuenta en línea
+- Qué pasó: en `cutterpay.netlify.app` toda la API respondía error; en local funcionaba.
+- Causa (3 cosas): 1) Netlify empaqueta la función como **CommonJS** y ahí `import.meta.url` no existe → la función se caía al arrancar; 2) `serverless-http` entrega el cuerpo como **Buffer** y `express.json()` no lo lee → los formularios llegaban vacíos; 3) el límite de intentos no encontraba la IP y lanzaba error.
+- Solución: `__dirname` cuando no hay `import.meta.url`; la función convierte el Buffer a JSON y pasa la IP de `x-nf-client-connection-ip`; el limitador usa esa IP con `validate: false`.
+- Regla para el futuro: **antes de subir cambios del backend, se prueba el paquete como lo arma Netlify** (`esbuild --format=cjs` + llamar al `handler`). Además, Netlify deja el sitio protegido con login: hay que ponerlo en *Public* en Visitor access.
 
 ### 2026-11-03 · Landing · El texto del héroe no se veía en celular
 - Qué pasó: la captura en 360 px mostraba el espacio del titular vacío.

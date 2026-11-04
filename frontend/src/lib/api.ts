@@ -39,14 +39,15 @@ interface Options {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   body?: unknown
   signal?: AbortSignal
+  headers?: Record<string, string>
 }
 
-export async function api<T>(path: string, { method = 'GET', body, signal }: Options = {}): Promise<T> {
+export async function api<T>(path: string, { method = 'GET', body, signal, headers: extra }: Options = {}): Promise<T> {
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort('timeout'), TIMEOUT_MS)
   signal?.addEventListener('abort', () => ctrl.abort(signal.reason))
 
-  const headers: Record<string, string> = { Accept: 'application/json' }
+  const headers: Record<string, string> = { Accept: 'application/json', ...extra }
   if (body !== undefined) headers['Content-Type'] = 'application/json'
   const token = tokenStore.get()
   if (token) headers.Authorization = `Bearer ${token}`

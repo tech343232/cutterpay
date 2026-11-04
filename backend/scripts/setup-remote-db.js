@@ -1,7 +1,7 @@
 // Crea las tablas y los datos de ejemplo en la base de Netlify (Neon). Se corre UNA vez:
 //   DATABASE_URL="postgres://..." npm run db:setup-remote
 // Si la base ya tiene tablas, no toca nada (agrega --force para borrarla y empezar de cero).
-import { getDb, closeDb, isRemote, schemaSql } from '../src/db/index.js';
+import { getDb, closeDb, isRemote, schemaSql, migrate } from '../src/db/index.js';
 import { seed } from '../src/db/seed.js';
 
 if (!isRemote) {
@@ -24,6 +24,7 @@ if (row.t && !force) {
   await db.exec(schemaSql());
   console.log('Cargando datos de ejemplo (puede tardar un minuto)…');
   await seed(db);
+  await migrate(db);
   console.log('Listo. La base de Netlify ya tiene a Sofía, el admin, las monedas y los fondos.');
 }
 await closeDb();

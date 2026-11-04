@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { cn } from '@/lib/utils'
 import { AuthLayout } from './AuthLayout'
+import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
 import { primeAudio, playWelcome } from '@/lib/sound'
 import { markWelcome } from '@/components/motion/WelcomeOverlay'
 
@@ -30,10 +31,11 @@ const RULES = [
 ]
 
 export default function Register() {
-  const { register: signUp } = useAuth()
+  const { register: signUp, verify } = useAuth()
   const toast = useToast()
   const navigate = useNavigate()
   const [serverError, setServerError] = useState<string | null>(null)
+  const [challenge, setChallenge] = useState<Challenge | null>(null)
   const {
     register,
     handleSubmit,
@@ -47,11 +49,7 @@ export default function Register() {
     setServerError(null)
     primeAudio()
     try {
-      const user = await signUp({ name: data.name, email: data.email, dpi: data.dpi || '', password: data.password })
-      markWelcome(firstName(user.name), 'registro')
-      playWelcome()
-      toast({ tone: 'success', title: `¡Listo, ${firstName(user.name)}!`, text: `Ya tienes ${usd(INITIAL_BALANCE)} listos para invertir.` })
-      navigate('/app', { replace: true })
+      setChallenge(await signUp({ name: data.name, email: data.email, dpi: data.dpi || '', password: data.password }))
     } catch (e) {
       if (e instanceof ApiError && e.fieldErrors) {
         Object.entries(e.fieldErrors).forEach(([k, msg]) => setError(k as keyof Form, { message: msg }))
@@ -72,6 +70,24 @@ export default function Register() {
         </>
       }
     >
+      {challenge ? (
+        <VerifyCode
+          challenge={challenge}
+          onChallenge={setChallenge}
+          resendPath="/auth/reenviar"
+          title="Confirma tu correo"
+          hint="Para saber que este correo es tuyo, te enviamos un código de 6 dígitos a"
+          submitLabel="Activar mi cuenta"
+          onSubmit={async (code) => {
+            primeAudio()
+            const { user } = await verify(challenge.challengeId, code)
+            markWelcome(firstName(user.name), 'registro')
+            playWelcome()
+            toast({ tone: 'success', title: `¡Listo, ${firstName(user.name)}!`, text: `Ya tienes ${usd(INITIAL_BALANCE)} listos para invertir.` })
+            navigate('/app', { replace: true })
+          }}
+        />
+      ) : (
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         {serverError && (
           <div role="alert" className="flex items-start gap-2 rounded-2xl border border-bad/30 bg-bad/10 p-3 text-sm text-bad">
@@ -101,6 +117,7 @@ export default function Register() {
         </Button>
         <p className="text-center text-xs text-muted">Nunca te pediremos datos de tu banco para empezar.</p>
       </form>
+      )}
     </AuthLayout>
   )
 }

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { CoinIcon } from '@/components/ui/Misc'
 import { cn } from '@/lib/utils'
 import { Confetti } from './Confetti'
+import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
 
 export type FlowMode = 'fund-invest' | 'fund-withdraw' | 'crypto-buy' | 'crypto-sell'
 
@@ -35,7 +36,7 @@ interface Props {
   bankRate?: number
 }
 
-const STEPS = ['Monto', 'Revisa', 'Listo']
+const STEPS = ['Monto', 'Revisa', 'Código', 'Listo']
 
 const COPY: Record<FlowMode, { title: (n: string) => string; cta: string; confirm: string; done: string; source: string; dest: (n: string) => string }> = {
   'fund-invest': { title: (n) => `Invertir en ${n}`, cta: 'Continuar', confirm: 'Confirmar e invertir', done: '¡Tu dinero ya está creciendo!', source: 'Saldo disponible', dest: (n) => n },
@@ -56,6 +57,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
   const [sending, setSending] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [result, setResult] = useState<{ amount: number; detail: ReactNode } | null>(null)
+  const [challenge, setChallenge] = useState<Challenge | null>(null)
 
   useEffect(() => {
     const d = ref.current
@@ -69,6 +71,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
       setTouched(false)
       setServerError(null)
       setResult(null)
+      setChallenge(null)
     }
   }, [open, mode])
 
@@ -104,25 +107,48 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
     if (!error) setStep(1)
   }
 
+  // Paso 2 → 3: pedir el código al correo para autorizar exactamente esta operación
+  const body = (): Record<string, unknown> =>
+    mode.startsWith('fund')
+      ? all ? { all: true } : { amount }
+      : all ? { symbol: target.key, all: true } : { symbol: target.key, amountUsd: amount }
+
   const confirm = async () => {
     setSending(true)
     setServerError(null)
     try {
+      const c = await api<Challenge>('/verificacion/operacion', {
+        method: 'POST',
+        body: { action: mode, slug: mode.startsWith('fund') ? target.key : undefined, payload: body() },
+      })
+      setChallenge(c)
+      setStep(2)
+    } catch (e) {
+      setServerError(e instanceof ApiError ? e.message : 'No pudimos enviarte el código. Intenta de nuevo.')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  // Paso 3 → 4: con el código correcto se hace la operación
+  const execute = async (code: string) => {
+    if (!challenge) return
+    const headers = { 'x-cp-desafio': challenge.challengeId, 'x-cp-codigo': code }
+    {
       let detail: ReactNode = null
       let final = amount
       if (mode === 'fund-invest') {
-        const r = await api<{ amount: number; yearlyGain: number }>(`/fondos/${target.key}/invertir`, { method: 'POST', body: { amount } })
+        const r = await api<{ amount: number; yearlyGain: number }>(`/fondos/${target.key}/invertir`, { method: 'POST', body: body(), headers })
         final = r.amount
         detail = <>En un año ganarías unos <b className="text-ok">{usd(r.yearlyGain)}</b> sin hacer nada más.</>
       } else if (mode === 'fund-withdraw') {
-        const r = await api<{ amount: number; gain: number }>(`/fondos/${target.key}/retirar`, { method: 'POST', body: all ? { all: true } : { amount } })
+        const r = await api<{ amount: number; gain: number }>(`/fondos/${target.key}/retirar`, { method: 'POST', body: body(), headers })
         final = r.amount
         detail = <>Ya está en tu saldo disponible. De eso, <b className="text-ok">{usd(r.gain)}</b> fueron ganancias.</>
       } else {
-        const body = all ? { symbol: target.key, all: true } : { symbol: target.key, amountUsd: amount }
         const r = await api<{ transaction: { quantity: number; total: number; price: number; gain: number | null } }>(
           `/transacciones/${mode === 'crypto-buy' ? 'compra' : 'venta'}`,
-          { method: 'POST', body },
+          { method: 'POST', body: body(), headers },
         )
         final = r.transaction.total
         detail =
@@ -133,13 +159,9 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
           )
       }
       setResult({ amount: final, detail })
-      setStep(2)
+      setStep(3)
       playSuccess()
       emitWalletChanged()
-    } catch (e) {
-      setServerError(e instanceof ApiError ? e.message : 'No se pudo completar. Intenta de nuevo.')
-    } finally {
-      setSending(false)
     }
   }
 
@@ -304,7 +326,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
               <Button size="lg" onClick={confirm} loading={sending}>
                 {sending ? 'Procesando…' : (
                   <>
-                    <Lock className="h-4 w-4" /> {c.confirm}
+                    <Lock className="h-4 w-4" /> Continuar con código
                   </>
                 )}
               </Button>
@@ -315,7 +337,24 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
             </motion.div>
           )}
 
-          {step === 2 && result && (
+          {step === 2 && challenge && (
+            <motion.div key="s2c" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-3">
+              <VerifyCode
+                challenge={challenge}
+                onChallenge={setChallenge}
+                resendPath="/verificacion/reenviar"
+                title="Confirma que eres tú"
+                hint={`Por tu seguridad, para mover ${usd(amount)} te enviamos un código a`}
+                submitLabel={c.confirm}
+                onSubmit={execute}
+              />
+              <button onClick={() => setStep(0)} className="flex items-center justify-center gap-1.5 text-sm font-semibold text-muted hover:text-fg">
+                <ArrowLeft className="h-4 w-4" /> Cambiar el monto
+              </button>
+            </motion.div>
+          )}
+
+          {step === 3 && result && (
             <motion.div key="s2" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="relative flex flex-col items-center gap-4 py-2 text-center">
               <Confetti />
               <motion.span

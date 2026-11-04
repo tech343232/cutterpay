@@ -13,6 +13,7 @@ import txRoutes from './routes/transactions.js';
 import reportRoutes from './routes/reports.js';
 import adminRoutes from './routes/admin.js';
 import fundRoutes from './routes/funds.js';
+import verificationRoutes from './routes/verification.js';
 
 export function createApp() {
   const app = express();
@@ -28,6 +29,7 @@ export function createApp() {
   app.use('/api/billetera', requireAuth, walletRoutes);
   app.use('/api/transacciones', requireAuth, txRoutes);
   app.use('/api/reportes', requireAuth, reportRoutes);
+  app.use('/api/verificacion', requireAuth, verificationRoutes);
   app.use('/api/admin', requireAuth, requireAdmin, adminRoutes);
 
   app.use('/api', notFoundHandler);

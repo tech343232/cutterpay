@@ -13,6 +13,7 @@ import { AuthLayout } from './AuthLayout'
 import { primeAudio, playWelcome } from '@/lib/sound'
 import { markWelcome } from '@/components/motion/WelcomeOverlay'
 import { firstName } from '@/lib/format'
+import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
 
 interface Form {
   email: string
@@ -20,7 +21,8 @@ interface Form {
 }
 
 export default function Login() {
-  const { login, endedReason } = useAuth()
+  const { login, verify, endedReason } = useAuth()
+  const [challenge, setChallenge] = useState<Challenge | null>(null)
   const navigate = useNavigate()
   const loc = useLocation() as { state?: { from?: string } }
   const [serverError, setServerError] = useState<string | null>(endedReason)
@@ -35,10 +37,7 @@ export default function Login() {
     setServerError(null)
     primeAudio()
     try {
-      const user = await login(data.email, data.password)
-      markWelcome(firstName(user.name), 'login')
-      playWelcome()
-      navigate(user.role === 'admin' ? '/admin' : loc.state?.from || '/app', { replace: true })
+      setChallenge(await login(data.email, data.password))
     } catch (e) {
       setServerError(e instanceof ApiError ? e.message : 'No pudimos iniciar sesión. Intenta de nuevo.')
     }
@@ -56,6 +55,26 @@ export default function Login() {
         </>
       }
     >
+      {challenge ? (
+        <div className="flex flex-col gap-4">
+          <VerifyCode
+            challenge={challenge}
+            onChallenge={setChallenge}
+            resendPath="/auth/reenviar"
+            submitLabel="Entrar"
+            onSubmit={async (code) => {
+              primeAudio()
+              const { user } = await verify(challenge.challengeId, code)
+              markWelcome(firstName(user.name), 'login')
+              playWelcome()
+              navigate(user.role === 'admin' ? '/admin' : loc.state?.from || '/app', { replace: true })
+            }}
+          />
+          <button type="button" onClick={() => setChallenge(null)} className="text-sm font-semibold text-muted hover:text-fg">
+            Usar otra cuenta
+          </button>
+        </div>
+      ) : (
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
         {serverError && (
           <div role="alert" className="flex items-start gap-2 rounded-2xl border border-bad/30 bg-bad/10 p-3 text-sm text-bad">
@@ -69,8 +88,9 @@ export default function Login() {
           {isSubmitting ? 'Entrando…' : 'Iniciar sesión'}
         </Button>
       </form>
+      )}
 
-      <div className="rounded-2xl border border-dashed border-line p-4">
+      {!challenge && <div className="rounded-2xl border border-dashed border-line p-4">
         <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted">Cuentas de demostración</p>
         <div className="flex flex-wrap gap-2">
           {DEMO_ACCOUNTS.map((a) => (
@@ -88,7 +108,7 @@ export default function Login() {
             </button>
           ))}
         </div>
-      </div>
+      </div>}
     </AuthLayout>
   )
 }

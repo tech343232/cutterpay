@@ -5,16 +5,17 @@ import { validate } from '../middleware/validate.js';
 import { tradeSchema } from '../../../shared/validation.js';
 import { buy, sell } from '../services/trading.js';
 import { audit } from '../services/audit.js';
+import { requireOtp } from '../middleware/otp.js';
 
 const router = Router();
 
-router.post('/compra', requireTrader, validate(tradeSchema), async (req, res) => {
+router.post('/compra', requireTrader, validate(tradeSchema), requireOtp('crypto-buy'), async (req, res) => {
   const result = await buy(req.user.id, req.body.symbol, req.body);
   audit(req.user.id, 'COMPRA', req, { id: result.transaction.id, total: result.transaction.total }).catch(() => {});
   res.status(201).json(result);
 });
 
-router.post('/venta', requireTrader, validate(tradeSchema), async (req, res) => {
+router.post('/venta', requireTrader, validate(tradeSchema), requireOtp('crypto-sell'), async (req, res) => {
   const result = await sell(req.user.id, req.body.symbol, req.body);
   audit(req.user.id, 'VENTA', req, { id: result.transaction.id, total: result.transaction.total }).catch(() => {});
   res.status(201).json(result);

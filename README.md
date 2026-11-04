@@ -65,6 +65,22 @@ CUTTERPAY/
 - **Seguridad:** bcrypt, JWT de 2 horas, bloqueo de 15 minutos tras 5 intentos fallidos, límite de peticiones, helmet, CORS cerrado, consultas con parámetros y tabla de auditoría.
 - **Modo oscuro únicamente**, por identidad de marca.
 
+## Códigos de verificación por correo
+
+Para entrar, crear la cuenta, comprar, vender, invertir o retirar, CUTTERPAY envía un **código de 6 dígitos** al correo del usuario (vence en 10 minutos, 5 intentos, un solo uso y solo sirve para esa operación exacta).
+
+- Las cuentas de demostración (`@cutterpay.com`) no tienen buzón real: su código aparece en pantalla.
+- En local, si no configuras el correo, el código también aparece en pantalla y en la consola del servidor.
+- En Netlify hay que configurar el envío (Gmail): agrega estas variables en *Environment variables*:
+
+| Variable | Valor |
+|---|---|
+| `SMTP_HOST` | `smtp.gmail.com` |
+| `SMTP_PORT` | `465` |
+| `SMTP_USER` | tu Gmail |
+| `SMTP_PASS` | la «contraseña de aplicación» de 16 letras (myaccount.google.com/apppasswords; requiere verificación en 2 pasos) |
+| `MAIL_FROM` | `CUTTERPAY <tu Gmail>` |
+
 ## Publicar en Netlify (desde GitHub)
 
 El proyecto ya está listo para Netlify: `netlify.toml`, la función `netlify/functions/api.mjs` (la misma API de Express) y la conexión a PostgreSQL cuando existe `NETLIFY_DATABASE_URL` o `DATABASE_URL`.

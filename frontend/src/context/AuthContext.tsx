@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { api, tokenStore } from '@/lib/api'
 import type { User } from '@/types'
+import type { Challenge } from '@/components/security/VerifyCode'
 
 type Status = 'checking' | 'authed' | 'anon'
 
@@ -16,8 +17,9 @@ interface AuthValue {
   status: Status
   /** Mensaje cuando la sesión terminó sola (expiró o la cuenta fue suspendida). */
   endedReason: string | null
-  login: (email: string, password: string) => Promise<User>
-  register: (input: RegisterInput) => Promise<User>
+  login: (email: string, password: string) => Promise<Challenge>
+  register: (input: RegisterInput) => Promise<Challenge>
+  verify: (challengeId: string, code: string) => Promise<{ user: User; firstTime: boolean }>
   logout: () => void
 }
 
@@ -52,22 +54,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('cp:session-ended', onEnded)
   }, [])
 
-  const login = useCallback(async (email: string, password: string) => {
-    const r = await api<{ token: string; user: User }>('/auth/login', { method: 'POST', body: { email, password } })
-    tokenStore.set(r.token)
-    setUser(r.user)
-    setStatus('authed')
-    setEndedReason(null)
-    return r.user
-  }, [])
+  const login = useCallback((email: string, password: string) => api<Challenge>('/auth/login', { method: 'POST', body: { email, password } }), [])
 
-  const register = useCallback(async (input: RegisterInput) => {
-    const r = await api<{ token: string; user: User }>('/auth/registro', { method: 'POST', body: input })
+  const register = useCallback((input: RegisterInput) => api<Challenge>('/auth/registro', { method: 'POST', body: input }), [])
+
+  // Segundo paso: el código del correo confirma que el correo es real y abre la sesión
+  const verify = useCallback(async (challengeId: string, code: string) => {
+    const r = await api<{ token: string; user: User; firstTime: boolean }>('/auth/verificar', { method: 'POST', body: { challengeId, code } })
     tokenStore.set(r.token)
     setUser(r.user)
     setStatus('authed')
     setEndedReason(null)
-    return r.user
+    return { user: r.user, firstTime: r.firstTime }
   }, [])
 
   const logout = useCallback(() => {
@@ -76,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus('anon')
   }, [])
 
-  const value = useMemo(() => ({ user, status, endedReason, login, register, logout }), [user, status, endedReason, login, register, logout])
+  const value = useMemo(() => ({ user, status, endedReason, login, register, verify, logout }), [user, status, endedReason, login, register, verify, logout])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

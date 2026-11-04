@@ -7,7 +7,7 @@ import { query, closeDb } from '../src/db/index.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const out = path.resolve(here, '../../database/cutterpay.sql');
-const TABLES = ['usuarios', 'billeteras', 'criptomonedas', 'portafolio', 'transacciones', 'historial_precios', 'recargas', 'auditoria', 'fondos', 'inversiones_fondo', 'movimientos_fondo', 'tasas_referencia'];
+const TABLES = ['usuarios', 'billeteras', 'criptomonedas', 'portafolio', 'transacciones', 'historial_precios', 'recargas', 'auditoria', 'fondos', 'inversiones_fondo', 'movimientos_fondo', 'tasas_referencia', 'codigos_verificacion'];
 
 const lit = (v) => {
   if (v === null || v === undefined) return 'NULL';
@@ -21,6 +21,7 @@ const lit = (v) => {
 let sql = `-- CUTTERPAY · exportación de la base de datos\n-- Generado: ${new Date().toISOString()}\n-- Motor: PostgreSQL\n\n`;
 sql += TABLES.slice().reverse().map((t) => `DROP TABLE IF EXISTS ${t} CASCADE;`).join('\n') + '\n\n';
 sql += fs.readFileSync(path.resolve(here, '../src/db/schema.sql'), 'utf8') + '\n';
+sql += fs.readFileSync(path.resolve(here, '../src/db/migrations.sql'), 'utf8') + '\n';
 
 for (const t of TABLES) {
   const rows = await query(`SELECT * FROM ${t} ORDER BY 1`);

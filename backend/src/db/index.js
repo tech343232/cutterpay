@@ -22,11 +22,19 @@ export const isRemote = Boolean(REMOTE_URL);
 
 let dbPromise = null;
 
-export function schemaSql() {
+function readSql(name) {
   // En Netlify el archivo se incluye con "included_files"; si no está, se busca junto al código
-  const candidates = [path.join(here, 'schema.sql'), path.resolve(process.cwd(), 'backend/src/db/schema.sql')];
+  const candidates = [path.join(here, name), path.resolve(process.cwd(), 'backend/src/db', name)];
   const file = candidates.find((f) => fs.existsSync(f));
+  if (!file) throw new Error(`No se encontró ${name}`);
   return fs.readFileSync(file, 'utf8');
+}
+export const schemaSql = () => readSql('schema.sql');
+export const migrationsSql = () => readSql('migrations.sql');
+
+/** Aplica los cambios nuevos de la base (idempotente). */
+async function migrate(api) {
+  await api.exec(migrationsSql());
 }
 
 // ---------- PGlite (local) ----------
@@ -43,6 +51,7 @@ async function initLocal() {
     close: () => db.close(),
   };
   await ensureSchema(api);
+  await migrate(api);
   return api;
 }
 
@@ -75,7 +84,9 @@ async function initRemote() {
     close: () => pool.end(),
   };
   // En la nube no se siembra automáticamente (tardaría demasiado en una función):
-  // se usa una vez "npm run db:setup-remote".
+  // se usa una vez "npm run db:setup-remote". Los cambios pequeños sí se aplican al arrancar.
+  const [row] = await api.query(`SELECT to_regclass('public.usuarios') AS t`);
+  if (row.t) await migrate(api);
   return api;
 }
 
@@ -111,4 +122,4 @@ export async function closeDb() {
   dbPromise = null;
 }
 
-export { ensureSchema };
+export { ensureSchema, migrate };

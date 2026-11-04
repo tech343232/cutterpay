@@ -12,7 +12,7 @@
   node_bundler = "esbuild"
   # PGlite solo se usa en local: no se empaqueta en la función
   external_node_modules = ["@electric-sql/pglite", "pg-native"]
-  included_files = ["backend/src/db/schema.sql"]
+  included_files = ["backend/src/db/schema.sql", "backend/src/db/migrations.sql"]
 
 # La API: /api/... → función "api"
 [[redirects]]
