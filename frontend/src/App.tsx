@@ -6,6 +6,7 @@ import { AdminRoute, GuestRoute, UserRoute } from '@/components/layout/Guards'
 import Landing from '@/pages/Landing'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
+import DemoLogin from '@/pages/DemoLogin'
 import Dashboard from '@/pages/Dashboard'
 import Market from '@/pages/Market'
 import Funds from '@/pages/Funds'
@@ -26,6 +27,7 @@ export default function App() {
         <ToastProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/demo/:mode" element={<DemoLogin />} />
             <Route element={<GuestRoute />}>
               <Route path="/login" element={<Login />} />
               <Route path="/registro" element={<Register />} />

@@ -65,7 +65,7 @@ export default function Login() {
             onSubmit={async (code) => {
               primeAudio()
               const { user } = await verify(challenge.challengeId, code)
-              markWelcome(firstName(user.name), 'login')
+              markWelcome(firstName(user.name), user.role === 'admin' ? 'admin' : 'login')
               playWelcome()
               navigate(user.role === 'admin' ? '/admin' : loc.state?.from || '/app', { replace: true })
             }}

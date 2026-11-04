@@ -5,7 +5,7 @@ import { LogoIcon } from '@/components/brand/Logo'
 const KEY = 'cp_welcome'
 
 /** Se marca al iniciar sesión o crear cuenta; el panel lo muestra una vez al entrar. */
-export function markWelcome(name: string, kind: 'login' | 'registro') {
+export function markWelcome(name: string, kind: 'login' | 'registro' | 'admin') {
   try {
     sessionStorage.setItem(KEY, JSON.stringify({ name, kind }))
   } catch {
@@ -15,7 +15,7 @@ export function markWelcome(name: string, kind: 'login' | 'registro') {
 
 /** Animación de bienvenida al entrar a CUTTERPAY: logo que se arma, destellos y saludo. */
 export function WelcomeOverlay() {
-  const [data, setData] = useState<{ name: string; kind: 'login' | 'registro' } | null>(null)
+  const [data, setData] = useState<{ name: string; kind: 'login' | 'registro' | 'admin' } | null>(null)
 
   useEffect(() => {
     try {
@@ -78,7 +78,7 @@ export function WelcomeOverlay() {
               <p className="font-display text-3xl font-extrabold sm:text-4xl">
                 {data.kind === 'registro' ? `¡Tu cuenta está lista, ${data.name}!` : `¡Qué bueno verte, ${data.name}!`}
               </p>
-              <p className="mt-2 text-muted">{data.kind === 'registro' ? 'Tus $1,000 de prueba ya te esperan.' : 'Tu dinero siguió creciendo mientras no estabas.'}</p>
+              <p className="mt-2 text-muted">{data.kind === 'registro' ? 'Tus $1,000 de prueba ya te esperan.' : data.kind === 'admin' ? 'Todo listo para revisar usuarios, monedas y reportes.' : 'Tu dinero siguió creciendo mientras no estabas.'}</p>
             </motion.div>
           </div>
         </motion.div>
