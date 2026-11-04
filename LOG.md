@@ -12,6 +12,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ## Reglas aprendidas
 
 ### Diseño y textos
+- **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Dogecoin)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
 - **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
 - **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código. *(O.T.I.S)*
 - **Los encabezados muestran solo el nombre**; la explicación va en un «?» (`components/ui/Help.tsx`). *(SOHO)*
@@ -32,6 +33,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Todo enfocado en monedas digitales (como pide el PDF)
+- Pedido: la landing trataba la cripto como algo extra («¿Quieres más emoción?»). El proyecto del PDF es de criptomonedas: el mensaje debe ser «haz crecer tu dinero así de sencillo con monedas digitales», para el principiante que tiene sus dólares quietos en el banco, destacando Bitcoin, Ethereum y Dogecoin.
+- Entregado: landing nueva centrada en las 3 monedas (tarjetas con explicación simple, precio en vivo, cuánto compras con $10 y cuánto se mueve cada una), problema del banco contra «la moneda que más subió hoy» con datos en vivo, beneficios y pasos de compra; historia animada contada con compra de Bitcoin; en el Inicio la acción principal es «Comprar monedas digitales» y los fondos pasan a segundo plano; Cripto va antes que Fondos en el menú.
+- Pendiente: nada.
 
 ### 2026-11-03 · DPI solo al retirar + todo responsive
 - Pedido: quitar el DPI del registro y pedirlo dentro, para retirar dinero; que todo funcione desde el celular.

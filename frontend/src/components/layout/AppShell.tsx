@@ -12,8 +12,8 @@ import { WelcomeOverlay } from '@/components/motion/WelcomeOverlay'
 
 const USER_NAV = [
   { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
-  { to: '/app/fondos', label: 'Fondos', icon: PiggyBank },
   { to: '/app/mercado', label: 'Cripto', icon: LineChart },
+  { to: '/app/fondos', label: 'Fondos', icon: PiggyBank },
   { to: '/app/portafolio', label: 'Portafolio', icon: PieChart },
   { to: '/app/historial', label: 'Historial', icon: History },
   { to: '/app/reportes', label: 'Reportes', icon: BarChart3 },

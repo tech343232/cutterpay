@@ -9,9 +9,9 @@ const SCENE_MS = 3800
 
 const SCENES = [
   { kicker: 'Paso 1', title: 'Te damos $10,000 para practicar' },
-  { kicker: 'Paso 2', title: 'Elige dónde quieres que crezca' },
-  { kicker: 'Paso 3', title: 'Invierte en dos toques' },
-  { kicker: 'Paso 4', title: 'Mira cómo crece cada segundo' },
+  { kicker: 'Paso 2', title: 'Elige tu moneda digital' },
+  { kicker: 'Paso 3', title: 'Compra en dos toques' },
+  { kicker: 'Paso 4', title: 'Mira tu dinero moverse en vivo' },
 ]
 
 function CountUp({ to, from = 0, duration = 1.6, decimals = 2, prefix = '$' }: { to: number; from?: number; duration?: number; decimals?: number; prefix?: string }) {
@@ -48,7 +48,7 @@ function SceneGift() {
         <p className="font-display text-4xl font-extrabold">
           <CountUp to={10000} />
         </p>
-        <p className="mt-4 text-xs text-white/75">Para empezar sin arriesgar nada</p>
+        <p className="mt-4 text-xs text-white/75">Aprende a invertir sin arriesgar tu dinero</p>
       </div>
       <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1.2 }} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 text-sm">
         <span className="grid h-9 w-9 place-items-center rounded-xl bg-ok/15 text-ok"><Gift className="h-4 w-4" /></span>
@@ -58,34 +58,45 @@ function SceneGift() {
   )
 }
 
-const FUNDS = [
-  { name: 'Ahorro Flexible', rate: '5.5%', color: '#4FD1A5' },
-  { name: 'Meta Plus', rate: '7.25%', color: '#9B8CFF' },
-  { name: 'Crecimiento', rate: '9.5%', color: '#FF6FB5' },
+const COINS = [
+  { name: 'Bitcoin', symbol: 'BTC', glyph: '₿', color: '#F7931A', price: '$68,420' },
+  { name: 'Ethereum', symbol: 'ETH', glyph: 'Ξ', color: '#627EEA', price: '$3,512' },
+  { name: 'Dogecoin', symbol: 'DOGE', glyph: 'Ð', color: '#C2A633', price: '$0.16' },
 ]
+
+function CoinDot({ c, size = 34 }: { c: (typeof COINS)[number]; size?: number }) {
+  return (
+    <span className="grid shrink-0 place-items-center rounded-full font-display font-bold text-white" style={{ width: size, height: size, background: c.color, fontSize: size * 0.48 }}>
+      {c.glyph}
+    </span>
+  )
+}
 
 function SceneChoose() {
   return (
     <motion.div {...pop} className="relative flex w-full flex-col gap-3">
-      {FUNDS.map((f, i) => (
+      {COINS.map((c, i) => (
         <motion.div
-          key={f.name}
+          key={c.symbol}
           initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0, scale: i === 1 ? [1, 1, 1.04] : 1, borderColor: i === 1 ? ['rgb(42,37,64)', 'rgb(42,37,64)', 'rgb(155,140,255)'] : 'rgb(42,37,64)' }}
-          transition={{ delay: i * 0.15, duration: i === 1 ? 2 : 0.4, times: i === 1 ? [0, 0.7, 1] : undefined }}
-          className="flex items-center justify-between rounded-2xl border bg-surface p-4"
+          animate={{ opacity: 1, x: 0, scale: i === 0 ? [1, 1, 1.04] : 1, borderColor: i === 0 ? ['rgb(42,37,64)', 'rgb(42,37,64)', 'rgb(155,140,255)'] : 'rgb(42,37,64)' }}
+          transition={{ delay: i * 0.15, duration: i === 0 ? 2 : 0.4, times: i === 0 ? [0, 0.7, 1] : undefined }}
+          className="flex items-center justify-between rounded-2xl border bg-surface p-3.5"
         >
           <span className="flex items-center gap-3 font-semibold">
-            <span className="h-3 w-3 rounded-full" style={{ background: f.color }} />
-            {f.name}
+            <CoinDot c={c} />
+            <span>
+              {c.name}
+              <span className="block text-xs font-medium text-muted">{c.symbol}</span>
+            </span>
           </span>
-          <span className="font-display text-xl font-bold" style={{ color: f.color }}>{f.rate}</span>
+          <span className="tabular font-display text-lg font-bold">{c.price}</span>
         </motion.div>
       ))}
       <motion.span
         className="absolute text-white drop-shadow"
         initial={{ left: '80%', top: '110%', opacity: 0 }}
-        animate={{ left: '62%', top: '46%', opacity: 1, scale: [1, 1, 0.85, 1] }}
+        animate={{ left: '70%', top: '12%', opacity: 1, scale: [1, 1, 0.85, 1] }}
         transition={{ delay: 0.6, duration: 1.2, scale: { delay: 1.8, duration: 0.3 } }}
       >
         <MousePointer2 className="h-6 w-6 fill-white" />
@@ -97,9 +108,9 @@ function SceneChoose() {
 function SceneInvest() {
   return (
     <motion.div {...pop} className="flex w-full flex-col items-center gap-4">
-      <FloatingArt name="shield" size={130} className="-mb-8" />
+      <FloatingArt name="shield" size={120} className="-mb-8" />
       <div className="w-full rounded-3xl border border-line bg-surface p-5">
-        <p className="text-sm text-muted">¿Cuánto quieres invertir?</p>
+        <p className="flex items-center gap-2 text-sm text-muted"><CoinDot c={COINS[0]} size={22} /> ¿Cuánto Bitcoin quieres?</p>
         <p className="font-display text-5xl font-bold">
           <CountUp to={100} duration={0.9} decimals={0} />
         </p>
@@ -115,7 +126,7 @@ function SceneInvest() {
           animate={{ scale: [1, 1, 0.94, 1] }}
           transition={{ duration: 1.6, times: [0, 0.6, 0.7, 0.8] }}
         >
-          Confirmar e invertir
+          Confirmar compra
         </motion.div>
         <motion.span
           className="absolute inset-0 m-auto grid h-14 w-14 place-items-center rounded-full bg-ok text-bg shadow-[0_0_40px_rgba(79,209,165,.6)]"
@@ -133,48 +144,38 @@ function SceneInvest() {
 function SceneGrow() {
   return (
     <motion.div {...pop} className="flex w-full flex-col gap-4">
-      <FloatingArt name="grow" size={140} className="mx-auto -mb-8" />
+      <FloatingArt name="grow" size={130} className="mx-auto -mb-8" />
       <div className="rounded-3xl border border-line bg-surface p-5">
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-sm text-muted">Tus $100 en un año</p>
+            <p className="flex items-center gap-2 text-sm text-muted"><CoinDot c={COINS[0]} size={20} /> Tus $100 en Bitcoin</p>
             <p className="font-display text-4xl font-extrabold text-ok">
-              <CountUp from={100} to={107.25} duration={2.4} />
+              <CountUp from={100} to={108.4} duration={2.4} />
             </p>
           </div>
-          <span className="rounded-full bg-ok/15 px-2.5 py-1 text-xs font-bold text-ok">+7.25%</span>
+          <span className="rounded-full bg-ok/15 px-2.5 py-1 text-xs font-bold text-ok">▲ en vivo</span>
         </div>
-        <svg viewBox="0 0 300 80" className="mt-3 h-20 w-full" aria-hidden>
+        <svg viewBox="0 0 300 80" className="mt-3 h-16 w-full" aria-hidden>
           <defs>
             <linearGradient id="grow-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stopColor="rgb(79,209,165)" stopOpacity=".35" />
               <stop offset="1" stopColor="rgb(79,209,165)" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <motion.path d="M0 72 C 50 68, 90 62, 140 50 S 230 22, 300 8 L300 80 L0 80 Z" fill="url(#grow-fill)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 1 }} />
-          <motion.path d="M0 72 C 50 68, 90 62, 140 50 S 230 22, 300 8" fill="none" stroke="rgb(79,209,165)" strokeWidth="3" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, ease: 'easeOut' }} />
+          <motion.path d="M0 62 L30 58 L55 66 L85 48 L110 54 L140 40 L165 46 L195 28 L225 34 L255 18 L300 10 L300 80 L0 80 Z" fill="url(#grow-fill)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 1 }} />
+          <motion.path d="M0 62 L30 58 L55 66 L85 48 L110 54 L140 40 L165 46 L195 28 L225 34 L255 18 L300 10" fill="none" stroke="rgb(79,209,165)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, ease: 'easeOut' }} />
         </svg>
       </div>
-      <div className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4 text-sm">
-        {[
-          { l: 'CUTTERPAY', v: '+$7.25', w: '100%', c: 'bg-aurora' },
-          { l: 'Ahorro en el banco', v: '+$0.75', w: '10%', c: 'bg-[rgb(90,84,120)]' },
-        ].map((r, i) => (
-          <div key={r.l} className="flex flex-col gap-1">
-            <div className="flex justify-between"><span className={i ? 'text-muted' : 'font-semibold'}>{r.l}</span><b className={i ? '' : 'text-ok'}>{r.v}</b></div>
-            <div className="h-2.5 rounded-full bg-surface2">
-              <motion.div className={cn('h-full rounded-full', r.c)} initial={{ width: 0 }} animate={{ width: r.w }} transition={{ delay: 0.6 + i * 0.2, duration: 1 }} />
-            </div>
-          </div>
-        ))}
-      </div>
+      <p className="rounded-2xl border border-line bg-surface p-3 text-center text-xs text-muted">
+        El precio sube y baja durante el día. <b className="text-fg">Tú decides cuándo vender.</b>
+      </p>
     </motion.div>
   )
 }
 
 const RENDER = [SceneGift, SceneChoose, SceneInvest, SceneGrow]
 
-/** Motion graphic de login/registro: cuenta en 15 segundos lo fácil que es invertir con CUTTERPAY. */
+/** Motion graphic: cuenta en 15 segundos lo fácil que es comprar monedas digitales con CUTTERPAY. */
 export function AuthShowcase({ compact = false }: { compact?: boolean }) {
   const reduce = useReducedMotion()
   const [i, setI] = useState(reduce ? 3 : 0)
@@ -191,7 +192,7 @@ export function AuthShowcase({ compact = false }: { compact?: boolean }) {
       {!compact && (
         <div className="flex items-center gap-3">
           <LogoIcon size={48} animated glow />
-          <p className="font-display text-lg font-bold">Así de fácil es crecer con <span className="text-aurora">CUTTERPAY</span></p>
+          <p className="font-display text-lg font-bold">Así de fácil es invertir con <span className="text-aurora">CUTTERPAY</span></p>
         </div>
       )}
       <div className="flex gap-1.5" aria-hidden>

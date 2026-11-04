@@ -4,7 +4,6 @@ import { ArrowRight, PiggyBank, Bitcoin, Receipt, Wallet as WalletIcon, Sparkles
 import { useAuth } from '@/context/AuthContext'
 import { useMarket, useWallet } from '@/hooks/useMarket'
 import { useApi } from '@/hooks/useApi'
-import { useFundCatalog } from '@/hooks/useFunds'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { Segmented } from '@/components/ui/Misc'
 import { Skeleton, ErrorState, EmptyState } from '@/components/ui/Feedback'
@@ -14,7 +13,6 @@ import { CoinTicker } from '@/components/trade/CoinTicker'
 import { TransactionList } from '@/components/trade/TransactionList'
 import { PriceChart } from '@/components/charts/PriceChart'
 import { LiveMoney } from '@/components/funds/LiveMoney'
-import { BankComparison } from '@/components/funds/BankComparison'
 import { MoneyFlow, type FlowMode, type FlowTarget } from '@/components/checkout/MoneyFlow'
 import { usd, firstName } from '@/lib/format'
 import type { Page, PricePoint, Transaction } from '@/types'
@@ -25,7 +23,6 @@ export default function Dashboard() {
   const { user } = useAuth()
   const market = useMarket()
   const wallet = useWallet()
-  const catalog = useFundCatalog()
   const [symbol, setSymbol] = useState('BTC')
   const [range, setRange] = useState<Range>('24h')
   const [flow, setFlow] = useState<{ mode: FlowMode; target: FlowTarget; available: number } | null>(null)
@@ -62,12 +59,12 @@ export default function Dashboard() {
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link to="/app/fondos">
-              <Button size="lg"><PiggyBank className="h-5 w-5" /> Invertir en un fondo</Button>
-            </Link>
-            <Button size="lg" variant="secondary" onClick={() => buy('BTC')} disabled={!w || !market.coins.length}>
-              <Bitcoin className="h-5 w-5" /> Comprar cripto
+            <Button size="lg" onClick={() => buy('BTC')} disabled={!w || !market.coins.length}>
+              <Bitcoin className="h-5 w-5" /> Comprar monedas digitales
             </Button>
+            <Link to="/app/fondos">
+              <Button size="lg" variant="secondary"><PiggyBank className="h-5 w-5" /> Fondos de ahorro</Button>
+            </Link>
           </div>
         </div>
 
@@ -95,19 +92,14 @@ export default function Dashboard() {
         )}
       </section>
 
-      {/* Comparación rápida con el banco */}
-      {catalog.funds.length > 0 && (
-        <Card>
-          <CardHeader
-            title="¿Cuánto ganarías frente al banco?"
-            subtitle="Mueve la barra y compara en dólares"
-            action={<Link to="/app/fondos" className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Ver fondos <ArrowRight className="h-4 w-4" /></Link>}
-          />
-          <BankComparison funds={catalog.funds} rates={catalog.referenceRates} compact />
-        </Card>
-      )}
-
-      {/* Cripto */}
+      {/* Monedas digitales */}
+      <div className="flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 className="text-2xl font-bold">Monedas digitales</h2>
+          <p className="text-sm text-muted">Toca una para ver su gráfica y comprar desde $1.</p>
+        </div>
+        <Link to="/app/mercado" className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Ver todas <ArrowRight className="h-4 w-4" /></Link>
+      </div>
       <div className="grid gap-3 sm:grid-cols-3 lg:gap-4">
         {market.loading
           ? [0, 1, 2].map((i) => <Skeleton key={i} className="h-[112px] rounded-3xl" />)
@@ -137,7 +129,7 @@ export default function Dashboard() {
 
       <Card>
         <CardHeader
-          title="Últimos movimientos de cripto"
+          title="Tus últimas compras y ventas"
           action={<Link to="/app/historial" className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Ver todo <ArrowRight className="h-4 w-4" /></Link>}
         />
         {recent.error ? (
@@ -145,7 +137,7 @@ export default function Dashboard() {
         ) : recent.loading || !recent.data ? (
           <Skeleton className="h-40" />
         ) : recent.data.items.length === 0 ? (
-          <EmptyState icon={<Receipt className="h-6 w-6" />} title="Todavía no compras cripto" text="Puedes empezar con $10. Toca «Comprar cripto» y sigue los 3 pasos." />
+          <EmptyState icon={<Receipt className="h-6 w-6" />} title="Todavía no compras cripto" text="Puedes empezar con $10. Toca «Comprar monedas digitales» y sigue los 3 pasos." />
         ) : (
           <TransactionList items={recent.data.items} dense />
         )}

@@ -30,7 +30,7 @@ export default function Market() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Cripto" subtitle="Precios que cambian cada 5 segundos. Compra desde $1, como en cualquier tienda en línea." />
+      <PageHeader title="Monedas digitales" subtitle="Bitcoin, Ethereum y Dogecoin con precios en vivo. Compra desde $1, como en cualquier tienda en línea." />
 
       <div className="flex gap-2 overflow-x-auto pb-1">
         {market.coins.map((c) => (
