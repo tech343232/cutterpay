@@ -14,6 +14,8 @@ import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
 import { DpiStep } from '@/components/security/DpiStep'
 import { useAuth } from '@/context/AuthContext'
 import { COIN_INFO } from '@/lib/coins'
+import { CardPay, type CardData } from './CardPay'
+import { cardSchema } from '@shared/validation.js'
 import { LogoIcon } from '@/components/brand/Logo'
 import { Badge } from '@/components/ui/Feedback'
 
@@ -73,6 +75,10 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
   const [result, setResult] = useState<{ amount: number; detail: ReactNode } | null>(null)
   const [challenge, setChallenge] = useState<Challenge | null>(null)
   const [chosen, setChosen] = useState<FlowTarget | null>(targetProp)
+  const [payWith, setPayWith] = useState<'saldo' | 'tarjeta'>('saldo')
+  const [card, setCard] = useState<CardData>({ holder: '', cardNumber: '', expiry: '', cvc: '' })
+  const [cardErrors, setCardErrors] = useState<Record<string, string>>({})
+  const isDemo = !!user?.email.toLowerCase().endsWith('@cutterpay.com')
   const target = chosen
 
   useEffect(() => {
@@ -100,7 +106,7 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
     if (!raw.trim()) return 'Escribe cuánto.'
     const parsed = fundDepositSchema.safeParse({ amount: raw.replace(',', '.') })
     if (!parsed.success) return isOut(mode) && parsed.error.issues[0].message.startsWith('Puedes') ? 'El mínimo es $1.' : parsed.error.issues[0].message
-    if (amount > available + 0.001) return isOut(mode) ? `Solo tienes ${usd(available)} aquí.` : `Te faltan ${usd(amount - available)}. Tienes ${usd(available)} disponibles.`
+    if (amount > available + 0.001 && mode !== 'crypto-buy') return isOut(mode) ? `Solo tienes ${usd(available)} aquí.` : `Te faltan ${usd(amount - available)}. Tienes ${usd(available)} disponibles.`
     if (mode === 'crypto-buy' && target?.price && Math.floor((amount / target.price) * 1e8) / 1e8 * target.price < LIMITS.minTradeUsd) return `El mínimo es ${usd(LIMITS.minTradeUsd)}.`
     return null
   }, [raw, all, amount, available, mode, target])
@@ -192,16 +198,30 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
 
   const next = () => {
     setTouched(true)
-    if (!error) setStep(1)
+    if (!error) {
+      // Si no le alcanza el saldo, la compra se paga con tarjeta
+      if (mode === 'crypto-buy') setPayWith(amount > available + 0.001 ? 'tarjeta' : payWith)
+      setStep(1)
+    }
   }
 
   // Paso 2 → 3: pedir el código al correo para autorizar exactamente esta operación
   const body = (): Record<string, unknown> =>
     mode.startsWith('fund')
       ? all ? { all: true } : { amount }
-      : all ? { symbol: target.key, all: true } : { symbol: target.key, amountUsd: amount }
+      : all ? { symbol: target.key, all: true } : { symbol: target.key, amountUsd: amount, ...(mode === 'crypto-buy' && payWith === 'tarjeta' ? { card } : {}) }
 
   const confirm = async () => {
+    if (mode === 'crypto-buy' && payWith === 'tarjeta') {
+      const parsed = cardSchema.safeParse(card)
+      if (!parsed.success) {
+        const errs: Record<string, string> = {}
+        for (const i of parsed.error.issues) errs[String(i.path[0])] ??= i.message
+        setCardErrors(errs)
+        return
+      }
+      setCardErrors({})
+    }
     setSending(true)
     setServerError(null)
     try {
@@ -392,7 +412,7 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
               <div className="rounded-3xl border border-line bg-bg/50 p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-muted">Resumen</p>
                 <dl className="mt-3 flex flex-col gap-3 text-sm">
-                  <Row k="Sale de" v={c.source} />
+                  <Row k="Sale de" v={mode === 'crypto-buy' && payWith === 'tarjeta' ? 'Tu tarjeta' : c.source} />
                   <Row k="Llega a" v={c.dest(target.name)} />
                   {mode === 'fund-invest' && <Row k="Rendimiento anual" v={`${target.rate}%`} />}
                   {mode === 'fund-invest' && <Row k="Ganancia estimada en 1 año" v={<span className="text-ok">+{usd(yearly)}</span>} />}
@@ -405,11 +425,15 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
                   </div>
                 </dl>
               </div>
+              {mode === 'crypto-buy' && (
+                <CardPay payWith={payWith} setPayWith={setPayWith} balance={available} amount={amount} card={card} setCard={setCard} errors={cardErrors} demo={isDemo} holderName={user?.name ?? ''} />
+              )}
               {serverError && (
                 <p role="alert" className="rounded-2xl border border-bad/30 bg-bad/10 p-3 text-sm font-semibold text-bad">
                   {serverError}
                 </p>
               )}
+              <p className="text-center text-xs text-muted">Te enviaremos un <b>código a tu correo</b> para confirmar que eres tú. Así evitamos fraudes y robos.</p>
               <Button size="lg" onClick={confirm} loading={sending}>
                 {sending ? 'Procesando…' : (
                   <>

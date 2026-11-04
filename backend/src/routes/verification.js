@@ -24,7 +24,7 @@ const SCHEMAS = {
 function describe(action, p) {
   const amount = p.all ? 'todo tu saldo' : usd(p.amountUsd ?? p.amount ?? 0);
   return {
-    'crypto-buy': `Compra de ${p.symbol} por ${amount}`,
+    'crypto-buy': `Compra de ${p.symbol} por ${amount}${p.card ? ` con tarjeta ····${p.card}` : ''}`,
     'crypto-sell': `Venta de ${p.symbol} por ${amount}`,
     'fund-invest': `Inversión de ${amount} en un fondo`,
     'fund-withdraw': `Retiro de ${amount} de un fondo`,

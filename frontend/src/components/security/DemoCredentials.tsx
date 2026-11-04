@@ -52,7 +52,7 @@ export function DemoCredentials({ onUse, only }: { onUse: (email: string, passwo
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="flex items-center gap-2 font-semibold"><FlaskConical className="h-4 w-4 text-primary" /> Cuenta de prueba · Sofía</p>
           <button type="button" onClick={() => onUse(user.email, user.password)} className="rounded-xl bg-primary/15 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/25">
-            Usar esta cuenta
+            Autocompletar
           </button>
         </div>
         <div className="flex flex-col gap-2">
@@ -71,7 +71,7 @@ export function DemoCredentials({ onUse, only }: { onUse: (email: string, passwo
               <Row k="Semilla" v={admin.password} secret />
               <div className="flex gap-2">
                 <button type="button" onClick={() => onUse(admin.email, admin.password)} className="flex-1 rounded-xl bg-warn/15 px-3 py-2 text-xs font-bold text-warn hover:bg-warn/25">
-                  Usar y entrar como admin
+                  Autocompletar
                 </button>
                 <button type="button" onClick={() => setReveal(false)} className="flex items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-xs font-bold text-muted hover:text-fg">
                   <EyeOff className="h-3.5 w-3.5" /> Ocultar

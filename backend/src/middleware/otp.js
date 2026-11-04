@@ -15,6 +15,8 @@ export function operationPayload(action, { params = {}, body = {} }) {
   else p.slug = String(params.slug || body.slug || '');
   for (const k of ['amountUsd', 'amount', 'quantity']) if (body[k] !== undefined) p[k] = Number(body[k]);
   if (body.all) p.all = true;
+  // Si paga con tarjeta, el código autoriza también ESA tarjeta
+  if (body.card) p.card = String(body.card.cardNumber || '').replace(/\D/g, '').slice(-4);
   return p;
 }
 

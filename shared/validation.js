@@ -78,6 +78,37 @@ const usdField = (min, minMsg) =>
     .refine((v) => v <= 10_000_000, 'Ese monto es demasiado grande.')
     .refine((v) => hasMaxDecimals(v, 2), 'Usa máximo 2 decimales (centavos).');
 
+const luhnOk = (digits) => {
+  let sum = 0;
+  let dbl = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let d = Number(digits[i]);
+    if (dbl) { d *= 2; if (d > 9) d -= 9; }
+    sum += d;
+    dbl = !dbl;
+  }
+  return sum % 10 === 0;
+};
+
+/** Datos de una tarjeta de crédito o débito (pasarela simulada). */
+export const cardSchema = z.object({
+  holder: z.string({ required_error: 'Escribe el nombre en la tarjeta.' }).trim().min(3, 'Escribe el nombre como aparece en la tarjeta.').max(80),
+  cardNumber: z
+    .string({ required_error: 'Escribe el número de la tarjeta.' })
+    .transform((s) => s.replace(/\s+/g, ''))
+    .refine((s) => /^\d{16}$/.test(s), 'La tarjeta debe tener 16 dígitos.')
+    .refine((s) => luhnOk(s), 'Ese número de tarjeta no es válido. Revisa los dígitos.'),
+  expiry: z
+    .string({ required_error: 'Escribe la fecha de vencimiento.' })
+    .trim()
+    .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Usa el formato MM/AA.')
+    .refine((s) => {
+      const [mm, yy] = s.split('/').map(Number);
+      return new Date(2000 + yy, mm, 1) > new Date();
+    }, 'La tarjeta está vencida.'),
+  cvc: z.string({ required_error: 'Escribe el CVC.' }).trim().regex(/^\d{3}$/, 'El CVC tiene 3 dígitos.'),
+});
+
 /** Compra o venta de cripto: por cantidad de moneda o por monto en dólares (como una tienda). */
 export const tradeSchema = z
   .object({
@@ -85,6 +116,8 @@ export const tradeSchema = z
     quantity: quantityField.optional(),
     amountUsd: usdField(LIMITS.minTradeUsd, `El mínimo es $${LIMITS.minTradeUsd}.`).optional(),
     all: z.boolean().optional(),
+    // Pagar con tarjeta en el mismo paso de la compra
+    card: cardSchema.optional(),
   })
   .refine((d) => d.quantity !== undefined || d.amountUsd !== undefined || d.all, {
     message: 'Escribe cuánto quieres comprar o vender.',

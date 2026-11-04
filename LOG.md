@@ -39,6 +39,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Peticiones
 
+### 2026-11-03 · Pagar con tarjeta al comprar, autocompletar en tester y presentación animada
+- Pedido: no obligar a recargar saldo antes de comprar: al comprar se pide la tarjeta (crédito o débito); en modo tester un botón autocompleta la tarjeta de prueba (y los datos de login y recarga); luego siempre se pide el código del correo para evitar fraudes, en tester y usuario. Presentación con motion graphics, flujo de registro con código, cómo comprar, pagar con tarjeta, retirar y métodos de pago a futuro.
+- Entregado: `tradeSchema.card` + cobro de la tarjeta dentro de la misma transacción de compra (recarga aprobada + compra; tarjeta 4000…0002 rechazada); el código del correo autoriza también esa tarjeta; checkout con «¿Cómo quieres pagar? Mi saldo / Tarjeta» (si no alcanza, tarjeta por defecto) y «Autocompletar con tarjeta de prueba» en cuentas @cutterpay.com; recarga con botón de autocompletar; botones «Autocompletar» en /login/tester y /login/admin. Presentación de 16 diapositivas con fondo de aurora vivo, celulares animados (registro, compra, retiro), tarjeta animada y entradas escalonadas.
+- Pendiente: nada.
+
 ### 2026-11-03 · Retiro propio, logins separados, fondos visuales y precios sin asustar
 - Pedido: pestaña de retiro (billetera digital, cuenta bancaria local, efectivo en cajero sin tarjeta); un login por tipo (usuario, tester, admin) con la contraseña semilla del admin oculta tras advertencia; contraseña larga para Sofía; paneles con menos texto y más visual; precios de monedas que no asusten («desde $1»); pie centrado en celular; párrafos centrados balanceados.
 - Entregado: tabla `retiros` + `POST /billetera/retirar` (DPI + código del correo atado al destino; cajero: código 8 dígitos + PIN, 24 h, enteros hasta $400); Billetera en pestañas Retirar / Recargar / Movimientos con ilustraciones SVG animadas; `/login` (usuario, sin cuentas), `/login/tester` (Sofía visible) y `/login/admin` (semilla oculta con advertencia de no compartir pantalla); claves nuevas `Sofia#Cutter2025-Invierte!` y `CutterAdmin#2025$Semilla!` (local y Neon); tarjeta de fondo con anillo animado y chips; selector de moneda con «Empieza desde $1» y «una moneda entera vale… tú compras un pedacito».

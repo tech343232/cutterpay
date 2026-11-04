@@ -33,7 +33,9 @@ function toResult(row, coin, balance) {
   };
 }
 
-export async function buy(userId, symbol, { quantity, amountUsd }) {
+export const DECLINED_TEST_CARD = '4000000000000002';
+
+export async function buy(userId, symbol, { quantity, amountUsd, card }) {
   await refreshPrices();
   return tx(async (q) => {
     const coin = await lockCoin(q, symbol);
@@ -42,6 +44,16 @@ export async function buy(userId, symbol, { quantity, amountUsd }) {
     const qty = amountUsd !== undefined ? Math.floor((amountUsd / coin.price) * 1e8) / 1e8 : round8(quantity);
     const total = round2(qty * coin.price);
     if (total < LIMITS.minTradeUsd) throw badRequest(`La compra mínima es de ${usd(LIMITS.minTradeUsd)}.`, { fieldErrors: { quantity: `La compra mínima es de ${usd(LIMITS.minTradeUsd)}.` } });
+    if (card) {
+      // Pago con tarjeta (simulado): el cobro entra al saldo y se usa en esta misma compra
+      const last4 = card.cardNumber.slice(-4);
+      if (card.cardNumber === DECLINED_TEST_CARD) {
+        throw new HttpError(402, `El banco rechazó la tarjeta terminada en ${last4}. Prueba con otra tarjeta.`, { fieldErrors: { cardNumber: 'Tarjeta rechazada por el banco.' } });
+      }
+      await q.query(`UPDATE billeteras SET saldo_usd = saldo_usd + $1, actualizado_en = now() WHERE usuario_id = $2`, [total, userId]);
+      await q.query(`INSERT INTO recargas (usuario_id, monto_usd, tarjeta_ultimos4, estado) VALUES ($1,$2,$3,'aprobada')`, [userId, total, last4]);
+      w.bal = round2(w.bal + total);
+    }
     if (total > w.bal) {
       const msg = `Te faltan ${usd(total - w.bal)} para esta compra.`;
       throw badRequest(msg, { fieldErrors: { quantity: msg } });

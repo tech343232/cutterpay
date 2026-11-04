@@ -158,7 +158,7 @@ export default function WalletPage() {
 
         {tab === 'recargar' && (
         <Card>
-          <CardHeader title="Recargar saldo" subtitle="Agrega saldo con tarjeta en segundos." />
+          <CardHeader title="Recargar saldo" subtitle="Opcional: también puedes pagar con tarjeta directo al comprar." />
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
             {serverError && (
               <div role="alert" className="flex items-start gap-2 rounded-2xl border border-bad/30 bg-bad/10 p-3 text-sm text-bad">
@@ -197,6 +197,20 @@ export default function WalletPage() {
                 </>
               )}
             </Button>
+            {user?.email.toLowerCase().endsWith('@cutterpay.com') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('holder', user?.name ?? '', { shouldValidate: true })
+                  setValue('cardNumber', TEST_CARDS[0].number, { shouldValidate: true })
+                  setValue('expiry', '12/29', { shouldValidate: true })
+                  setValue('cvc', '123', { shouldValidate: true })
+                }}
+                className="rounded-2xl border border-dashed border-primary/60 bg-primary/10 px-3 py-2.5 text-sm font-bold text-primary hover:bg-primary/20"
+              >
+                Autocompletar con tarjeta de prueba
+              </button>
+            )}
             <div className="rounded-2xl bg-bg/60 p-3 text-xs text-muted">
               <p className="mb-1 font-bold uppercase tracking-wider">Tarjetas de prueba</p>
               {TEST_CARDS.map((c) => (
