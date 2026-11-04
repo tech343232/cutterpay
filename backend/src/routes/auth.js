@@ -25,10 +25,10 @@ const authLimiter = rateLimit({
   message: { error: 'Demasiadas solicitudes desde tu red. Espera unos minutos e intenta de nuevo.' },
 });
 
-const publicUser = (u) => ({ id: u.id, name: u.nombre, email: u.correo, role: u.rol, status: u.estado });
+const publicUser = (u) => ({ id: u.id, name: u.nombre, email: u.correo, role: u.rol, status: u.estado, hasDpi: Boolean(u.dpi) });
 
 router.post('/registro', authLimiter, validate(registerSchema), async (req, res) => {
-  const { name, email, dpi, password } = req.body;
+  const { name, email, password } = req.body;
   const [exists] = await query(`SELECT id, correo_verificado FROM usuarios WHERE correo = $1`, [email]);
   const hash = await bcrypt.hash(password, 10);
   if (exists && exists.correo_verificado) {
@@ -38,15 +38,15 @@ router.post('/registro', authLimiter, validate(registerSchema), async (req, res)
   if (exists) {
     // Se registró antes pero nunca confirmó su correo: se actualizan sus datos y se reenvía el código
     const [u] = await query(
-      `UPDATE usuarios SET nombre = $2, password_hash = $3, dpi = $4 WHERE id = $1 RETURNING *`,
-      [exists.id, name, hash, dpi || null],
+      `UPDATE usuarios SET nombre = $2, password_hash = $3 WHERE id = $1 RETURNING *`,
+      [exists.id, name, hash],
     );
     return res.status(201).json(await createChallenge({ user: u, purpose: 'registro' }));
   }
   const user = await tx(async (q) => {
     const [u] = await q.query(
-      `INSERT INTO usuarios (nombre, correo, password_hash, dpi, ultimo_acceso) VALUES ($1,$2,$3,$4, now()) RETURNING *`,
-      [name, email, hash, dpi || null],
+      `INSERT INTO usuarios (nombre, correo, password_hash, ultimo_acceso) VALUES ($1,$2,$3, now()) RETURNING *`,
+      [name, email, hash],
     );
     await q.query(`INSERT INTO billeteras (usuario_id, saldo_usd) VALUES ($1,$2)`, [u.id, config.initialBalance]);
     await audit(u.id, 'REGISTRO', req, { saldoInicial: config.initialBalance }, q);

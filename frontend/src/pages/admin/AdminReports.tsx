@@ -58,7 +58,7 @@ export default function AdminReports() {
             )}
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
             <Card>
               <CardHeader title="Volumen por moneda" subtitle="Dólares comprados vs vendidos" />
               <VolumeChart rows={coins.data.items} />

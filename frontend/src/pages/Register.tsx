@@ -50,7 +50,7 @@ export default function Register() {
     setServerError(null)
     primeAudio()
     try {
-      setChallenge(await signUp({ name: data.name, email: data.email, dpi: data.dpi || '', password: data.password }))
+      setChallenge(await signUp({ name: data.name, email: data.email, password: data.password }))
     } catch (e) {
       if (e instanceof ApiError && e.fieldErrors) {
         Object.entries(e.fieldErrors).forEach(([k, msg]) => setError(k as keyof Form, { message: msg }))
@@ -124,7 +124,6 @@ export default function Register() {
         )}
         <Input label="Nombre completo" autoComplete="name" placeholder="Sofía Ramírez" {...register('name')} error={errors.name?.message} />
         <Input label="Correo" type="email" autoComplete="email" placeholder="sofia@correo.com" {...register('email')} error={errors.email?.message} />
-        <Input label="DPI (opcional)" inputMode="numeric" maxLength={13} placeholder="13 dígitos" {...register('dpi')} error={errors.dpi?.message} />
         <div className="flex flex-col gap-2">
           <Input label="Contraseña" type="password" autoComplete="new-password" {...register('password')} error={errors.password?.message} />
           <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs">

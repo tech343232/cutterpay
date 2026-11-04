@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { validate } from '../middleware/validate.js';
 import { requireTrader } from '../middleware/auth.js';
+import { forbidden } from '../lib/errors.js';
 import { operationPayload } from '../middleware/otp.js';
 import { createChallenge, resendChallenge } from '../services/otp.js';
 import { tradeSchema, fundDepositSchema, fundWithdrawSchema, fieldErrors } from '../../../shared/validation.js';
@@ -37,6 +38,9 @@ const bodySchema = z.object({
 
 router.post('/operacion', requireTrader, validate(bodySchema), async (req, res) => {
   const { action, slug, payload } = req.body;
+  if (action === 'fund-withdraw' && !req.user.dpi) {
+    throw forbidden('Para retirar dinero primero verifica tu identidad con tu DPI.', { code: 'DPI_REQUIRED' });
+  }
   const parsed = SCHEMAS[action].safeParse(payload);
   if (!parsed.success) {
     const errs = fieldErrors(parsed.error);

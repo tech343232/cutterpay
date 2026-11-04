@@ -18,7 +18,7 @@ export async function requireAuth(req, _res, next) {
   } catch (e) {
     throw new HttpError(401, e.name === 'TokenExpiredError' ? 'Tu sesión expiró. Inicia sesión otra vez.' : 'Inicia sesión para continuar.');
   }
-  const [user] = await query(`SELECT id, nombre, correo, rol, estado FROM usuarios WHERE id = $1`, [payload.sub]);
+  const [user] = await query(`SELECT id, nombre, correo, rol, estado, dpi FROM usuarios WHERE id = $1`, [payload.sub]);
   if (!user) throw new HttpError(401, 'Inicia sesión para continuar.');
   if (user.estado === 'suspendido') throw forbidden('Tu cuenta está suspendida. Contacta al administrador.', { code: 'ACCOUNT_SUSPENDED' });
   if (user.estado === 'baja') throw forbidden('Esta cuenta fue dada de baja.', { code: 'ACCOUNT_CLOSED' });
@@ -28,6 +28,12 @@ export async function requireAuth(req, _res, next) {
 
 export function requireAdmin(req, _res, next) {
   if (req.user?.rol !== 'admin') throw forbidden('Esta sección es solo para administradores.');
+  next();
+}
+
+/** Para retirar dinero hay que haber verificado la identidad con el DPI. */
+export function requireDpi(req, _res, next) {
+  if (!req.user?.dpi) throw forbidden('Para retirar dinero primero verifica tu identidad con tu DPI.', { code: 'DPI_REQUIRED' });
   next();
 }
 

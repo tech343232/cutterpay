@@ -22,6 +22,8 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Ninguna pantalla muestra barra horizontal** y todo debe caber en un celular de **360 px**. *(YODO)*
 
 ### Técnica
+- **Las cuadrículas usan `grid-cols-[minmax(0,1fr)]`** (también en las columnas `xl:`): con `1fr` o sin columnas, una tabla o gráfica ancha hace crecer la tarjeta más que la pantalla.
+- **Revisión móvil automática**: página temporal que abre cada ruta en un marco de 360 px y mide qué se sale; se borra antes de subir (lleva tokens).
 - **Si aparece `EADDRINUSE`**, se busca qué proceso ocupa el puerto y se cierra antes de cambiar nada. Antes de reiniciar la base, se apagan los servidores. *(O.T.I.S + error 2026-11-03)*
 - **Capturas de prueba**: rutas completas, sin variables dentro de comillas simples; para ver una parte se ocultan las demás en vez de desplazar. *(O.T.I.S)*
 - **El precio y los saldos los calcula siempre el servidor**; el navegador solo manda qué y cuánto.
@@ -30,6 +32,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · DPI solo al retirar + todo responsive
+- Pedido: quitar el DPI del registro y pedirlo dentro, para retirar dinero; que todo funcione desde el celular.
+- Entregado: registro con nombre, correo y contraseña; paso «Verifica tu identidad» la primera vez que se retira de un fondo (DPI guatemalteco: 13 dígitos, departamento 01–22 y municipio válidos, único por cuenta); el servidor bloquea retiros sin DPI. Prueba automática de las 14 pantallas en 360 px: todas sin desborde; cuadrículas con `minmax(0,1fr)`.
+- Pendiente: nada.
 
 ### 2026-11-03 · Registro más estético con imágenes generadas por Codex
 - Pedido: el registro no se veía atractivo; agregar motion graphic e imágenes sofisticadas (generadas con Codex) para que un principiante se sienta apegado desde el primer minuto.

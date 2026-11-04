@@ -11,6 +11,8 @@ import { CoinIcon } from '@/components/ui/Misc'
 import { cn } from '@/lib/utils'
 import { Confetti } from './Confetti'
 import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
+import { DpiStep } from '@/components/security/DpiStep'
+import { useAuth } from '@/context/AuthContext'
 
 export type FlowMode = 'fund-invest' | 'fund-withdraw' | 'crypto-buy' | 'crypto-sell'
 
@@ -49,6 +51,7 @@ const isOut = (m: FlowMode) => m === 'fund-withdraw' || m === 'crypto-sell'
 
 export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0.75 }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [raw, setRaw] = useState('')
@@ -215,6 +218,9 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
           ))}
         </ol>
 
+        {mode === 'fund-withdraw' && !user?.hasDpi ? (
+          <DpiStep onDone={() => setStep(0)} />
+        ) : (
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-4">
@@ -385,6 +391,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
             </motion.div>
           )}
         </AnimatePresence>
+        )}
       </div>
     </dialog>
   )

@@ -69,7 +69,7 @@ export default function AdminUserDetail() {
             <StatCard label="Ganancia sin vender" value={<span className={data.wallet.unrealized >= 0 ? 'text-ok' : 'text-bad'}>{signedUsd(data.wallet.unrealized)}</span>} />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
             <Card className="min-w-0">
               <CardHeader title="Historial de movimientos" subtitle={`${data.transactions.total} operaciones`} />
               {data.transactions.items.length === 0 ? (

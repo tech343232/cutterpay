@@ -51,7 +51,7 @@ export default function Market() {
 
       {market.error && <ErrorState message={market.error.message} onRetry={market.reload} />}
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-6">
           <Card>
             {!coin ? (

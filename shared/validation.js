@@ -39,14 +39,24 @@ export const passwordField = z
 export const registerSchema = z.object({
   name: nameField,
   email: emailField,
-  dpi: z
-    .string()
-    .trim()
-    .regex(/^\d{13}$/, 'El DPI tiene 13 dígitos, sin espacios.')
-    .optional()
-    .or(z.literal('')),
   password: passwordField,
 });
+
+/**
+ * DPI de Guatemala: 13 dígitos = 8 de número + 1 verificador + 2 de departamento (01–22) + 2 de municipio.
+ * Se pide la primera vez que la persona quiere retirar dinero.
+ */
+export const dpiSchema = z.object({
+  dpi: z
+    .string({ required_error: 'Escribe tu DPI.' })
+    .transform((s) => s.replace(/[\s-]/g, ''))
+    .refine((s) => /^\d{13}$/.test(s), 'El DPI tiene 13 dígitos. Escríbelo sin espacios ni guiones.')
+    .refine((s) => {
+      const dept = Number(s.slice(9, 11))
+      const muni = Number(s.slice(11, 13))
+      return dept >= 1 && dept <= 22 && muni >= 1
+    }, 'Ese DPI no es válido. Revisa los últimos 4 dígitos (departamento y municipio).'),
+})
 
 export const loginSchema = z.object({
   email: emailField,

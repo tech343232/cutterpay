@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAuth, requireTrader } from '../middleware/auth.js';
+import { requireAuth, requireTrader, requireDpi } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
 import { fundDepositSchema, fundWithdrawSchema } from '../../../shared/validation.js';
 import { listFunds, getUserFunds, deposit, withdraw, listMovements } from '../services/funds.js';
@@ -27,7 +27,7 @@ router.post('/:slug/invertir', requireAuth, requireTrader, validate(fundDepositS
   res.status(201).json(result);
 });
 
-router.post('/:slug/retirar', requireAuth, requireTrader, validate(fundWithdrawSchema), requireOtp('fund-withdraw'), async (req, res) => {
+router.post('/:slug/retirar', requireAuth, requireTrader, requireDpi, validate(fundWithdrawSchema), requireOtp('fund-withdraw'), async (req, res) => {
   const result = await withdraw(req.user.id, req.params.slug, req.body);
   audit(req.user.id, 'FONDO_RETIRO', req, { fondo: req.params.slug, monto: result.amount }).catch(() => {});
   res.status(201).json(result);

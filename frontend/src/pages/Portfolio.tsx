@@ -36,7 +36,7 @@ export default function Portfolio() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_400px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_400px]">
         <Card className="min-w-0">
           <CardHeader title="Tus criptomonedas" />
           {w.holdings.length === 0 ? (
@@ -87,7 +87,7 @@ export default function Portfolio() {
             </div>
           )}
         </Card>
-        <Card>
+        <Card className="min-w-0">
           <CardHeader title="Distribución" subtitle="Cómo está repartido tu dinero" />
           <AllocationChart slices={slices} />
         </Card>

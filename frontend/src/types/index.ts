@@ -8,6 +8,7 @@ export interface User {
   email: string
   role: Role
   status: AccountStatus
+  hasDpi?: boolean
 }
 
 export interface Coin {

@@ -79,7 +79,7 @@ export default function Funds() {
             ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_.8fr]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[1.2fr_.8fr]">
         <Card>
           <CardHeader title="¿Dónde crece más tu dinero?" subtitle="Compara en dólares con lo que te da un banco tradicional" />
           {catalog.funds.length > 0 && <BankComparison funds={catalog.funds} rates={catalog.referenceRates} />}

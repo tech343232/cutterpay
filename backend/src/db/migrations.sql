@@ -3,6 +3,9 @@
 -- Correo verificado con código
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS correo_verificado BOOLEAN NOT NULL DEFAULT FALSE;
 
+-- Un DPI solo puede pertenecer a una cuenta
+CREATE UNIQUE INDEX IF NOT EXISTS ux_usuarios_dpi ON usuarios (dpi) WHERE dpi IS NOT NULL;
+
 -- 13. Códigos de verificación por correo (login, registro y operaciones con dinero)
 CREATE TABLE IF NOT EXISTS codigos_verificacion (
   id           VARCHAR(36)  PRIMARY KEY,

@@ -46,7 +46,7 @@ export default function Reports() {
         <ActivityChart days={data.activity} mode={mode} />
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader title="Volumen por moneda" subtitle="Cuánto has comprado y vendido de cada una" />
           <VolumeChart rows={data.byCoin} />

@@ -63,7 +63,7 @@ export default function WalletPage() {
     <div className="flex flex-col gap-6">
       <PageHeader title="Billetera" subtitle="Tu saldo disponible y tus recargas." />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_1.1fr]">
         <div className="flex flex-col gap-6">
           <div className="relative overflow-hidden rounded-4xl bg-aurora p-6 text-white shadow-glow">
             <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15 blur-2xl" />

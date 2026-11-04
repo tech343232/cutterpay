@@ -21,6 +21,8 @@ interface AuthValue {
   register: (input: RegisterInput) => Promise<Challenge>
   verify: (challengeId: string, code: string) => Promise<{ user: User; firstTime: boolean }>
   logout: () => void
+  /** Marca que ya verificó su identidad con DPI */
+  markDpi: () => void
 }
 
 const AuthContext = createContext<AuthValue | null>(null)
@@ -68,13 +70,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { user: r.user, firstTime: r.firstTime }
   }, [])
 
+  const markDpi = useCallback(() => setUser((u) => (u ? { ...u, hasDpi: true } : u)), [])
+
   const logout = useCallback(() => {
     tokenStore.clear()
     setUser(null)
     setStatus('anon')
   }, [])
 
-  const value = useMemo(() => ({ user, status, endedReason, login, register, verify, logout }), [user, status, endedReason, login, register, verify, logout])
+  const value = useMemo(() => ({ user, status, endedReason, login, register, verify, logout, markDpi }), [user, status, endedReason, login, register, verify, logout, markDpi])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
