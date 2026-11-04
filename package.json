@@ -13,7 +13,8 @@
     "build": "npm run build -w frontend",
     "db:reset": "npm run db:reset -w backend",
     "db:export": "npm run db:export -w backend",
-    "db:setup-remote": "npm run db:setup-remote -w backend"
+    "db:setup-remote": "npm run db:setup-remote -w backend",
+    "mail:test": "npm run mail:test -w backend --"
   },
   "dependencies": {
     "zod": "^3.24.1"

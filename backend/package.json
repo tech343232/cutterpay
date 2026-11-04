@@ -8,7 +8,8 @@
     "start": "node src/server.js",
     "db:reset": "node scripts/reset-db.js",
     "db:export": "node scripts/export-db.js",
-    "db:setup-remote": "node scripts/setup-remote-db.js"
+    "db:setup-remote": "node scripts/setup-remote-db.js",
+    "mail:test": "node scripts/test-mail.js"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.15",
