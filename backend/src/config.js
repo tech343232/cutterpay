@@ -2,8 +2,13 @@ import 'dotenv/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// En Netlify el código se empaqueta como CommonJS y import.meta.url no existe: se usa __dirname.
-const here = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const here = (() => {
+  try {
+    return path.dirname(fileURLToPath(import.meta.url));
+  } catch {
+    return __dirname; // Netlify empaqueta en CommonJS: ahí import.meta.url no existe
+  }
+})();
 const backendRoot = path.resolve(here, '..');
 
 export const config = {

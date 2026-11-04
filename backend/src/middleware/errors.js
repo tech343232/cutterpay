@@ -8,9 +8,9 @@ export function errorHandler(err, _req, res, _next) {
     return res.status(400).json({ error: 'Los datos enviados no tienen un formato válido.' });
   }
   const status = err.status || 500;
-  if (status >= 500) console.error('[error]', err);
+  if (status >= 500 && !err.expose) console.error('[error]', err);
   res.status(status).json({
-    error: status >= 500 ? 'Algo salió mal en el servidor. Intenta de nuevo en unos segundos.' : err.message,
+    error: status >= 500 && !err.expose ? 'Algo salió mal en el servidor. Intenta de nuevo en unos segundos.' : err.message,
     ...(err.fieldErrors ? { fieldErrors: err.fieldErrors } : {}),
     ...(err.code ? { code: err.code } : {}),
   });

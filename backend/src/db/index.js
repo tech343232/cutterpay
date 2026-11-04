@@ -8,8 +8,13 @@ import { fileURLToPath } from 'node:url';
 import { config } from '../config.js';
 import { seed } from './seed.js';
 
-// En Netlify el código se empaqueta como CommonJS y import.meta.url no existe: se usa __dirname.
-const here = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const here = (() => {
+  try {
+    return path.dirname(fileURLToPath(import.meta.url));
+  } catch {
+    return __dirname; // Netlify empaqueta en CommonJS: ahí import.meta.url no existe
+  }
+})();
 // Neon agrega "channel_binding=require" a la cadena; el driver "pg" no lo necesita, así que se quita.
 const REMOTE_URL = (process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL || '')
   .trim()

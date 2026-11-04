@@ -2,6 +2,7 @@ export class HttpError extends Error {
   constructor(status, message, extra = {}) {
     super(message);
     this.status = status;
+    this.expose = true; // mensaje pensado para el usuario: se muestra aunque sea 5xx
     Object.assign(this, extra);
   }
 }

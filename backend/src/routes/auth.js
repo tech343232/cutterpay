@@ -29,12 +29,20 @@ const publicUser = (u) => ({ id: u.id, name: u.nombre, email: u.correo, role: u.
 
 router.post('/registro', authLimiter, validate(registerSchema), async (req, res) => {
   const { name, email, dpi, password } = req.body;
-  const [exists] = await query(`SELECT 1 FROM usuarios WHERE correo = $1`, [email]);
-  if (exists) {
+  const [exists] = await query(`SELECT id, correo_verificado FROM usuarios WHERE correo = $1`, [email]);
+  const hash = await bcrypt.hash(password, 10);
+  if (exists && exists.correo_verificado) {
     const msg = 'Ese correo ya tiene una cuenta. ¿Quieres iniciar sesión?';
     throw badRequest(msg, { fieldErrors: { email: msg } });
   }
-  const hash = await bcrypt.hash(password, 10);
+  if (exists) {
+    // Se registró antes pero nunca confirmó su correo: se actualizan sus datos y se reenvía el código
+    const [u] = await query(
+      `UPDATE usuarios SET nombre = $2, password_hash = $3, dpi = $4 WHERE id = $1 RETURNING *`,
+      [exists.id, name, hash, dpi || null],
+    );
+    return res.status(201).json(await createChallenge({ user: u, purpose: 'registro' }));
+  }
   const user = await tx(async (q) => {
     const [u] = await q.query(
       `INSERT INTO usuarios (nombre, correo, password_hash, dpi, ultimo_acceso) VALUES ($1,$2,$3,$4, now()) RETURNING *`,
