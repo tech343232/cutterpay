@@ -2,8 +2,7 @@ import { useId, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * "?" con explicación en un globo (regla de SOHO: los encabezados muestran solo el nombre;
- * la explicación para principiantes va aquí). Funciona con mouse, teclado y toque.
+ * "?" con explicación en un globo. Funciona con mouse, teclado y toque.
  */
 export function Help({ title, children, className, align = 'center' }: { title?: string; children: ReactNode; className?: string; align?: 'center' | 'left' | 'right' }) {
   const [open, setOpen] = useState(false)

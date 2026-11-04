@@ -309,7 +309,7 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
           </button>
         </div>
 
-        {/* Pasos (estilo SOHO: número, y ✓ al completar) */}
+        {/* Pasos (número, y ✓ al completar) */}
         {Stepper}
 
         {mode === 'fund-withdraw' && !user?.hasDpi ? (

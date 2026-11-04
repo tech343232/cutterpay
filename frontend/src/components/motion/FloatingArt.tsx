@@ -10,7 +10,7 @@ const ALT: Record<ArtName, string> = {
 }
 
 /**
- * Ilustración 3D (generada con Codex) que flota, con halo de luz y partículas.
+ * Ilustración 3D (generada con IA) que flota, con halo de luz y partículas.
  * mix-blend-mode: screen hace invisible su fondo negro sobre el fondo oscuro de la app.
  */
 export function FloatingArt({ name, size = 220, className, delay = 0 }: { name: ArtName; size?: number; className?: string; delay?: number }) {

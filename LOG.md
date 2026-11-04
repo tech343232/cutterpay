@@ -1,7 +1,7 @@
 # LOG.md · Cerebro del proyecto CUTTERPAY
 
 Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo se resolvió.
-**Antes de empezar una tarea nueva se lee este archivo** para no repetir errores (ni los de CUTTERPAY ni los de las otras apps: SOHO, O.T.I.S, YODO, DUMO, DRUKY, FINIX).
+**Antes de empezar una tarea nueva se lee este archivo** para no repetir errores.
 
 ## Cómo se usa
 
@@ -14,24 +14,24 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ### Diseño y textos
 - **Textos neutros en género** para el usuario («Te damos la bienvenida», no «Bienvenida/o»).
 - **Íconos que no confunden**: acciones generales (comprar) con íconos generales (bolsa), nunca el logo de una moneda específica.
-- **Ningún texto plano**: base en gris (`text-muted`), lo importante en **negrita blanca** y la frase protagonista con `.cp-mark` (subrayado degradado). Va en la línea de YODO: «énfasis en negrita + subrayado degradado».
+- **Ningún texto plano**: base en gris (`text-muted`), lo importante en **negrita blanca** y la frase protagonista con `.cp-mark` (subrayado degradado). 
 - **Siempre usar SVG propios animados con CSS** (trazos que se dibujan con `pathLength=1` + `stroke-dashoffset`, `transform-box: fill-box` para escalar partes). Degradados de trazos finos con `gradientUnits="userSpaceOnUse"`.
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
 - **CUTTERPAY es un simulador de monedas digitales con las 3 del PDF: Bitcoin, Ethereum y Dogecoin (saldo de prueba $1,000)**. Lo que pide el PDF se respeta tal cual; la propuesta propia va en la forma (promesa, perfiles, diseño), no en cambiar requisitos según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
-- **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
-- **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código. *(O.T.I.S)*
-- **Los encabezados muestran solo el nombre**; la explicación va en un «?» (`components/ui/Help.tsx`). *(SOHO)*
-- **Flujos guiados paso a paso**: un paso abierto a la vez, con número y ✓ al completarlo (checkout `MoneyFlow`). *(SOHO)*
+- **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto.
+- **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código.
+- **Los encabezados muestran solo el nombre**; la explicación va en un «?» (`components/ui/Help.tsx`).
+- **Flujos guiados paso a paso**: un paso abierto a la vez, con número y ✓ al completarlo (checkout `MoneyFlow`).
 - **Comprar o invertir debe sentirse como una compra en línea**: monto en dólares → resumen tipo carrito → confirmación con celebración.
 - **Solo modo oscuro.** Logo oficial «Aurora» (C cortada + moneda), animado. Morado `#9B8CFF` como acento.
-- **Nada de `alert`, `confirm` o `prompt` nativos**: se usan diálogos propios. *(YODO)*
-- **Ninguna pantalla muestra barra horizontal** y todo debe caber en un celular de **360 px**. *(YODO)*
+- **Nada de `alert`, `confirm` o `prompt` nativos**: se usan diálogos propios.
+- **Ninguna pantalla muestra barra horizontal** y todo debe caber en un celular de **360 px**.
 
 ### Técnica
 - **Las cuadrículas usan `grid-cols-[minmax(0,1fr)]`** (también en las columnas `xl:`): con `1fr` o sin columnas, una tabla o gráfica ancha hace crecer la tarjeta más que la pantalla.
 - **Revisión móvil automática**: página temporal que abre cada ruta en un marco de 360 px y mide qué se sale; se borra antes de subir (lleva tokens).
-- **Si aparece `EADDRINUSE`**, se busca qué proceso ocupa el puerto y se cierra antes de cambiar nada. Antes de reiniciar la base, se apagan los servidores. *(O.T.I.S + error 2026-11-03)*
-- **Capturas de prueba**: rutas completas, sin variables dentro de comillas simples; para ver una parte se ocultan las demás en vez de desplazar. *(O.T.I.S)*
+- **Si aparece `EADDRINUSE`**, se busca qué proceso ocupa el puerto y se cierra antes de cambiar nada. Antes de reiniciar la base, se apagan los servidores.
+- **Capturas de prueba**: rutas completas, sin variables dentro de comillas simples; para ver una parte se ocultan las demás en vez de desplazar.
 - **El precio y los saldos los calcula siempre el servidor**; el navegador solo manda qué y cuánto.
 - **Toda operación de dinero va en una transacción SQL con `FOR UPDATE`.**
 - **Pensado para Netlify**: nada de temporizadores en el servidor (precios e intereses se calculan según el tiempo que pasó); la base es PostgreSQL (PGlite en local, Neon en la nube).
@@ -94,9 +94,9 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Entregado: registro con nombre, correo y contraseña; paso «Verifica tu identidad» la primera vez que se retira de un fondo (DPI guatemalteco: 13 dígitos, departamento 01–22 y municipio válidos, único por cuenta); el servidor bloquea retiros sin DPI. Prueba automática de las 14 pantallas en 360 px: todas sin desborde; cuadrículas con `minmax(0,1fr)`.
 - Pendiente: nada.
 
-### 2026-11-03 · Registro más estético con imágenes generadas por Codex
-- Pedido: el registro no se veía atractivo; agregar motion graphic e imágenes sofisticadas (generadas con Codex) para que un principiante se sienta apegado desde el primer minuto.
-- Entregado: 3 ilustraciones 3D generadas con Codex CLI (`frontend/public/img/`: grow, shield, gift; 35–43 KB cada una), componente `FloatingArt` (flota, halo que respira, partículas); registro dentro de tarjeta de vidrio con borde animado, pasos «Tus datos → Confirma tu correo → ¡A invertir!» y banner de regalo; escudo 3D en el paso del código; ilustraciones dentro de la historia animada.
+### 2026-11-03 · Registro más estético con imágenes generadas por IA
+- Pedido: el registro no se veía atractivo; agregar motion graphic e imágenes sofisticadas (generadas con IA) para que un principiante se sienta apegado desde el primer minuto.
+- Entregado: 3 ilustraciones 3D generadas con IA (`frontend/public/img/`: grow, shield, gift; 35–43 KB cada una), componente `FloatingArt` (flota, halo que respira, partículas); registro dentro de tarjeta de vidrio con borde animado, pasos «Tus datos → Confirma tu correo → ¡A invertir!» y banner de regalo; escudo 3D en el paso del código; ilustraciones dentro de la historia animada.
 - Pendiente: nada.
 
 ### 2026-11-03 · Código por correo para entrar y para mover dinero
