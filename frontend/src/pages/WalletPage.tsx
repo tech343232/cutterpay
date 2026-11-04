@@ -74,9 +74,9 @@ export default function WalletPage() {
         onChange={setTab}
         className="w-full sm:w-auto"
         options={[
-          { value: 'retirar', label: <span className="flex items-center justify-center gap-1.5"><ArrowUpFromLine className="h-4 w-4" /> Retirar</span> },
-          { value: 'recargar', label: <span className="flex items-center justify-center gap-1.5"><ArrowDownToLine className="h-4 w-4" /> Recargar</span> },
-          { value: 'movimientos', label: <span className="flex items-center justify-center gap-1.5"><ListOrdered className="h-4 w-4" /> Movimientos</span> },
+          { value: 'retirar', label: <span className="flex items-center justify-center gap-1.5"><ArrowUpFromLine className="hidden h-4 w-4 sm:block" /> Retirar</span> },
+          { value: 'recargar', label: <span className="flex items-center justify-center gap-1.5"><ArrowDownToLine className="hidden h-4 w-4 sm:block" /> Recargar</span> },
+          { value: 'movimientos', label: <span className="flex items-center justify-center gap-1.5"><ListOrdered className="hidden h-4 w-4 sm:block" /> Movimientos</span> },
         ]}
       />
 

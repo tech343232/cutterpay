@@ -6,12 +6,12 @@ import { AuthShowcase } from '@/components/motion/AuthShowcase'
 /** Formulario a la izquierda; a la derecha (o arriba en celular) la historia animada de CUTTERPAY. */
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: ReactNode; children: ReactNode }) {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="flex flex-col px-4 py-6 sm:px-10">
+    <div className="grid min-h-screen grid-cols-[minmax(0,1fr)] lg:grid-cols-2">
+      <div className="flex min-w-0 flex-col px-4 py-6 sm:px-10">
         <Link to="/" className="w-fit">
           <Logo size={34} />
         </Link>
-        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-start gap-6 py-6 lg:justify-center lg:py-8">
+        <div className="mx-auto flex w-full min-w-0 max-w-md flex-1 flex-col justify-start gap-6 py-6 lg:justify-center lg:py-8">
           <div className="rounded-4xl border border-line bg-surface/70 p-5 lg:hidden">
             <AuthShowcase compact />
           </div>

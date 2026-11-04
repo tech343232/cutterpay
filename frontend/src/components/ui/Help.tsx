@@ -22,7 +22,7 @@ export function Help({ title, children, className, align = 'center' }: { title?:
         onMouseLeave={() => setOpen(false)}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
-        className="grid h-[18px] w-[18px] place-items-center rounded-full border border-line bg-surface2 text-[11px] font-bold normal-case tracking-normal text-muted transition hover:border-primary/60 hover:text-fg"
+        className="grid h-6 w-6 place-items-center sm:h-[18px] sm:w-[18px] rounded-full border border-line bg-surface2 text-[11px] font-bold normal-case tracking-normal text-muted transition hover:border-primary/60 hover:text-fg"
       >
         ?
       </button>

@@ -17,7 +17,7 @@ function CopyBtn({ text, label }: { text: string; label: string }) {
           /* el navegador no dejó copiar: el texto queda visible para seleccionarlo */
         }
       }}
-      className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line text-muted transition hover:border-primary/60 hover:text-fg"
+      className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-line text-muted transition hover:border-primary/60 hover:text-fg"
       aria-label={`Copiar ${label}`}
     >
       {done ? <Check className="h-4 w-4 text-ok" /> : <Copy className="h-4 w-4" />}
@@ -27,9 +27,9 @@ function CopyBtn({ text, label }: { text: string; label: string }) {
 
 function Row({ k, v, secret }: { k: string; v: string; secret?: boolean }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="w-20 shrink-0 text-xs font-semibold uppercase tracking-wider text-muted">{k}</span>
-      <code className={cn('min-w-0 flex-1 truncate rounded-lg bg-bg/70 px-2.5 py-1.5 font-mono text-sm', secret && 'text-fg')}>{v}</code>
+    <div className="flex min-w-0 items-center gap-2">
+      <span className="w-16 shrink-0 sm:w-20 text-xs font-semibold uppercase tracking-wider text-muted">{k}</span>
+      <code className={cn('min-w-0 flex-1 truncate rounded-lg bg-bg/70 px-2.5 py-1.5 font-mono text-xs sm:text-sm', secret && 'text-fg')}>{v}</code>
       <CopyBtn text={v} label={k} />
     </div>
   )
@@ -49,7 +49,7 @@ export function DemoCredentials({ onUse, only }: { onUse: (email: string, passwo
     <div className="flex flex-col gap-3">
       {/* Prueba */}
       {only === 'tester' && <div className="rounded-3xl border border-line bg-surface/70 p-4">
-        <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="flex items-center gap-2 font-semibold"><FlaskConical className="h-4 w-4 text-primary" /> Cuenta de prueba · Sofía</p>
           <button type="button" onClick={() => onUse(user.email, user.password)} className="rounded-xl bg-primary/15 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/25">
             Usar esta cuenta

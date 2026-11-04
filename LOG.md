@@ -121,6 +121,12 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Errores
 
+### 2026-11-03 · Responsive · Logins de tester/admin y pestañas de Billetera se salían en celular
+- Qué pasó: en 360 px /login/tester medía 490 px, /login/admin 421 px y las pestañas de Billetera 426 px.
+- Causa: la cuadrícula del login (`grid` sin columnas) toma el ancho mínimo de su contenido, y el encabezado de credenciales no podía partirse; las pestañas tenían íconos + texto + mucho relleno.
+- Solución: `grid-cols-[minmax(0,1fr)]` y `min-w-0` en AuthLayout, encabezado con `flex-wrap`, pestañas sin íconos en celular y con menos relleno; botón «?» de 24 px en celular.
+- Regla para el futuro: **toda pantalla nueva entra a la prueba de 360 px** (incluidas /login/tester y /login/admin) antes de subirla.
+
 ### 2026-11-03 · Backend · Retiro a cajero fallaba (código 42P08)
 - Causa: PostgreSQL no pudo deducir el tipo de `$5` usado a la vez como valor y dentro de `CASE`.
 - Solución: calcular la fecha de vencimiento en Node y pasarla como parámetro aparte.
