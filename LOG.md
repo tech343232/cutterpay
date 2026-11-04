@@ -12,6 +12,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ## Reglas aprendidas
 
 ### Diseño y textos
+- **Ningún texto plano**: base en gris (`text-muted`), lo importante en **negrita blanca** y la frase protagonista con `.cp-mark` (subrayado degradado). Va en la línea de YODO: «énfasis en negrita + subrayado degradado».
 - **Siempre usar SVG propios animados con CSS** (trazos que se dibujan con `pathLength=1` + `stroke-dashoffset`, `transform-box: fill-box` para escalar partes). Degradados de trazos finos con `gradientUnits="userSpaceOnUse"`.
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
 - **CUTTERPAY es un simulador de monedas digitales con las 3 del PDF: Bitcoin, Ethereum y Dogecoin (saldo de prueba $1,000)**. Lo que pide el PDF se respeta tal cual; la propuesta propia va en la forma (promesa, perfiles, diseño), no en cambiar requisitos según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
@@ -35,6 +36,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Textos con negritas/subrayado y CTA del pie llamativo
+- Pedido: el «Crear cuenta» del pie debe verse llamativo; los textos no deben ser planos: negritas, subrayado y contraste blanco/gris para dar protagonismo.
+- Entregado: clase `.cp-mark` (negrita blanca + subrayado con degradado que se dibuja al cargar; `.ok` en verde); dentro de textos grises toda negrita se vuelve blanca; frases clave marcadas en héroe, monedas, problema, beneficios, pasos, perfiles, cierre y pie; pie con botón degradado con brillo + «Ya tengo cuenta».
+- Pendiente: nada.
 
 ### 2026-11-03 · 3 links para entrar
 - Pedido: links para entrar como usuario público, como administrador y para probar compras.
@@ -102,6 +108,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Pendiente: nada.
 
 ## Errores
+
+### 2026-11-03 · Diseño · Texto de la solución partido en columnas
+- Causa: el párrafo era `flex`; al meter negritas el texto quedó en varios nodos y cada uno se volvió una columna.
+- Solución: envolver el texto en un `<span>` dentro del contenedor flex.
+- Regla para el futuro: en un contenedor `flex` con ícono + texto, el texto siempre va dentro de su propio `<span>`.
 
 ### 2026-11-03 · Scripts · `npm run db:setup-remote -- --force` no reiniciaba la nube
 - Causa: el script raíz pasa los argumentos a otro `npm run`, y npm se queda con `--force` como opción suya.

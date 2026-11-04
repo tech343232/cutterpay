@@ -87,33 +87,33 @@ const PERSONAS = [
     tag: 'Profesional',
     title: 'Cansado de depender solo de su sueldo',
     pains: [
-      'Tu sueldo llega y a fin de mes ya se fue. Nada queda trabajando para ti.',
-      'Tus ahorros duermen en la cuenta del banco ganando casi nada.',
-      'Si mañana fallara tu empleo, no tienes otro ingreso que te respalde.',
+      <>Tu sueldo llega y a fin de mes <b>ya se fue</b>. Nada queda trabajando para ti.</>,
+      <>Tus ahorros <b>duermen en la cuenta del banco</b> ganando casi nada.</>,
+      <>Si mañana fallara tu empleo, <b>no tienes otro ingreso</b> que te respalde.</>,
     ],
-    win: 'Con CUTTERPAY pones una parte de tu sueldo a trabajar desde $1, sin dejar tu empleo.',
+    win: <>Con CUTTERPAY pones una parte de tu sueldo <span className="cp-mark ok">a trabajar desde $1</span>, sin dejar tu empleo.</>,
   },
   {
     Art: ArtFreelancer,
     tag: 'Independiente',
     title: 'Quiere crear otra fuente de ingresos',
     pains: [
-      'Tus ingresos suben y bajan cada mes. Un mes flojo te deja sin colchón.',
-      'Si un día dejas de trabajar, ese día dejas de ganar.',
-      'Lo que te sobra en los meses buenos se queda quieto en el banco.',
+      <>Tus ingresos suben y bajan cada mes. <b>Un mes flojo te deja sin colchón.</b></>,
+      <>Si un día dejas de trabajar, <b>ese día dejas de ganar</b>.</>,
+      <>Lo que te sobra en los meses buenos <b>se queda quieto en el banco</b>.</>,
     ],
-    win: 'Con CUTTERPAY lo que te sobra en un buen mes se mueve en monedas digitales y no se queda quieto.',
+    win: <>Con CUTTERPAY lo que te sobra en un buen mes <span className="cp-mark ok">se mueve en monedas digitales</span> y no se queda quieto.</>,
   },
   {
     Art: ArtBusiness,
     tag: 'Dueño de negocio',
     title: 'Quiere invertir sus ganancias',
     pains: [
-      'Las ganancias de tu negocio se acumulan en la cuenta sin crecer.',
-      'Todo tu dinero depende de un solo negocio: si bajan las ventas, baja todo.',
-      'No tienes tiempo para aprender inversiones complicadas.',
+      <>Las ganancias de tu negocio <b>se acumulan en la cuenta sin crecer</b>.</>,
+      <>Todo tu dinero <b>depende de un solo negocio</b>: si bajan las ventas, baja todo.</>,
+      <><b>No tienes tiempo</b> para aprender inversiones complicadas.</>,
     ],
-    win: 'Con CUTTERPAY inviertes tus ganancias en minutos, en 3 pasos y sin asesores.',
+    win: <>Con CUTTERPAY inviertes tus ganancias <span className="cp-mark ok">en minutos, en 3 pasos</span> y sin asesores.</>,
   },
 ]
 
@@ -124,7 +124,7 @@ export function Personas() {
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
         <p className="text-sm font-bold uppercase tracking-wider text-primary">¿Para quién es CUTTERPAY?</p>
         <h2 className="text-3xl font-bold sm:text-5xl">Para quien quiere que su dinero deje de estar quieto</h2>
-        <p className="text-lg text-muted">Si te ves en alguno de estos perfiles, CUTTERPAY es para ti.</p>
+        <p className="text-lg text-muted">Si te ves en alguno de estos perfiles, <span className="cp-mark">CUTTERPAY es para ti</span>.</p>
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-3">
         {PERSONAS.map(({ Art, tag, title, pains, win }, i) => (
@@ -141,16 +141,16 @@ export function Personas() {
               </div>
             </div>
             <ul className="relative flex flex-col gap-3">
-              {pains.map((p) => (
-                <li key={p} className="flex items-start gap-3 text-[15px]">
+              {pains.map((p, i) => (
+                <li key={i} className="flex items-start gap-3 text-[15px]">
                   <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-bad/15 text-bad"><X className="h-3.5 w-3.5" strokeWidth={3} /></span>
-                  <span className="text-fg/90">{p}</span>
+                  <span className="text-muted">{p}</span>
                 </li>
               ))}
             </ul>
             <p className="relative mt-auto flex items-start gap-3 rounded-3xl border border-ok/25 bg-ok/10 p-4 text-[15px] font-semibold">
               <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-ok" />
-              {win}
+              <span>{win}</span>
             </p>
           </article>
         ))}

@@ -71,6 +71,28 @@
 @property --cp-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 @keyframes cp-spin { to { --cp-angle: 360deg; } }
 
+/* ---------- Énfasis en textos ---------- */
+/* Dentro de un texto gris, lo que va en negrita se vuelve blanco: así resalta solo */
+.text-muted b, .text-muted strong { color: rgb(var(--fg)); font-weight: 700; }
+/* Frase protagonista: negrita blanca + subrayado con degradado de marca que se dibuja al cargar */
+.cp-mark {
+  color: rgb(var(--fg));
+  font-weight: 700;
+  background-image: linear-gradient(90deg, #FF6FB5, #C94BE0, #8A6BFF);
+  background-repeat: no-repeat;
+  background-size: 100% 0.16em;
+  background-position: 0 94%;
+  padding-bottom: 0.04em;
+  animation: cp-mark-in 1.1s cubic-bezier(.3,.9,.3,1) 0.4s both;
+  transition: background-size .3s ease;
+}
+.cp-mark:hover { background-size: 100% 0.32em; }
+.cp-mark.ok { background-image: linear-gradient(90deg, #4FD1A5, #9EF0D3); }
+@keyframes cp-mark-in { from { background-size: 0% 0.16em; } }
+/* Brillo que cruza un botón cada pocos segundos */
+.cp-shine-btn { position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%); transform: translateX(-120%); animation: cp-shine-btn 3.2s ease-in-out infinite; pointer-events: none; }
+@keyframes cp-shine-btn { 0%, 55% { transform: translateX(-120%); } 85%, 100% { transform: translateX(120%); } }
+
 /* ---------- Ilustraciones SVG de los perfiles (todo con CSS) ---------- */
 .cp-persona { animation: cp-pop-in .8s cubic-bezier(.2,1.2,.4,1) backwards; transition: transform .4s ease, border-color .4s ease; }
 .cp-persona:hover { transform: translateY(-6px) rotate(-.4deg); border-color: rgb(var(--primary) / .5); }
