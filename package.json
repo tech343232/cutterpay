@@ -2,6 +2,8 @@
   "name": "cutterpay",
   "private": true,
   "version": "0.1.0",
+  "author": "Sofía del Carmen Ramírez Sagastume",
+  "license": "UNLICENSED",
   "type": "module",
   "description": "CUTTERPAY — simulador de compra y venta de criptomonedas (Proyecto final Desarrollo Web, UMG)",
   "workspaces": [

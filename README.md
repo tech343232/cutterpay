@@ -1,7 +1,31 @@
 # CUTTERPAY
 
-Simulador de compra y venta de criptomonedas con dinero ficticio.
-Proyecto final de Desarrollo Web · Universidad Mariano Gálvez de Guatemala.
+**Haz crecer tu dinero así de sencillo.** Simulador de compra y venta de criptomonedas con dinero de práctica.
+
+| | |
+|---|---|
+| **Creado por** | Sofía del Carmen Ramírez Sagastume |
+| **Proyecto** | Proyecto Final · Desarrollo Web |
+| **Universidad** | Facultad de Ingeniería · Universidad Mariano Gálvez de Guatemala |
+| **En línea** | https://cutterpay.netlify.app |
+
+## Abrir el proyecto en VS Code
+
+**Opción 1 · Un clic:** abre este enlace y VS Code clona el proyecto solo:
+
+`vscode://vscode.git/clone?url=https%3A%2F%2Fgithub.com%2Ftech343232%2Fcutterpay.git`
+
+**Opción 2 · Terminal:**
+
+```bash
+git clone https://github.com/tech343232/cutterpay.git
+cd cutterpay
+code .
+npm install
+npm run dev
+```
+
+Luego abre http://localhost:5173. La base de datos local se crea sola la primera vez.
 
 ## Links
 
