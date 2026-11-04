@@ -2,7 +2,9 @@ import 'dotenv/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const backendRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// En Netlify el código se empaqueta como CommonJS y import.meta.url no existe: se usa __dirname.
+const here = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const backendRoot = path.resolve(here, '..');
 
 export const config = {
   port: Number(process.env.PORT || 3001),

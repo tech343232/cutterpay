@@ -17,6 +17,9 @@ const authLimiter = rateLimit({
   limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
+  // En Netlify la IP llega por cabecera; si faltara, no se rompe la petición
+  keyGenerator: (req) => req.ip || req.get('x-nf-client-connection-ip') || 'sin-ip',
+  validate: false,
   message: { error: 'Demasiadas solicitudes desde tu red. Espera unos minutos e intenta de nuevo.' },
 });
 
