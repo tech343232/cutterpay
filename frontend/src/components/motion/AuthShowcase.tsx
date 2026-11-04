@@ -8,7 +8,7 @@ import { FloatingArt } from './FloatingArt'
 const SCENE_MS = 3800
 
 const SCENES = [
-  { kicker: 'Paso 1', title: 'Te damos $10,000 para practicar' },
+  { kicker: 'Paso 1', title: 'Te damos $1,000 para probar' },
   { kicker: 'Paso 2', title: 'Elige tu moneda digital' },
   { kicker: 'Paso 3', title: 'Compra en dos toques' },
   { kicker: 'Paso 4', title: 'Mira tu dinero moverse en vivo' },
@@ -44,9 +44,9 @@ function SceneGift() {
       <FloatingArt name="gift" size={150} className="mx-auto -mb-8" />
       <div className="relative overflow-hidden rounded-3xl bg-aurora p-5 text-white shadow-glow">
         <motion.div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/20 blur-2xl" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 2.4, repeat: Infinity }} />
-        <p className="text-sm font-semibold text-white/80">Saldo para practicar</p>
+        <p className="text-sm font-semibold text-white/80">Saldo de prueba</p>
         <p className="font-display text-4xl font-extrabold">
-          <CountUp to={10000} />
+          <CountUp to={1000} />
         </p>
         <p className="mt-4 text-xs text-white/75">Aprende a invertir sin arriesgar tu dinero</p>
       </div>
@@ -61,7 +61,7 @@ function SceneGift() {
 const COINS = [
   { name: 'Bitcoin', symbol: 'BTC', glyph: '₿', color: '#F7931A', price: '$68,420' },
   { name: 'Ethereum', symbol: 'ETH', glyph: 'Ξ', color: '#627EEA', price: '$3,512' },
-  { name: 'Dogecoin', symbol: 'DOGE', glyph: 'Ð', color: '#C2A633', price: '$0.16' },
+  { name: 'Solana', symbol: 'SOL', glyph: '◎', color: '#9945FF', price: '$152' },
 ]
 
 function CoinDot({ c, size = 34 }: { c: (typeof COINS)[number]; size?: number }) {

@@ -16,7 +16,7 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'dev-only-secret-change-me',
   jwtExpires: process.env.JWT_EXPIRES || '2h',
   corsOrigin: (process.env.CORS_ORIGIN || process.env.URL || 'http://localhost:5173').split(',').map((s) => s.trim()),
-  initialBalance: Number(process.env.INITIAL_BALANCE || 10000),
+  initialBalance: Number(process.env.INITIAL_BALANCE || 1000),
   pgDataDir: path.resolve(backendRoot, process.env.PGDATA_DIR || './.data/pgdata'),
   // Correo (códigos de verificación). Funciona con Gmail (contraseña de aplicación) o Brevo.
   mail: {

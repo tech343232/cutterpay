@@ -26,8 +26,8 @@ const ABOUT: Record<string, { text: string; moves: string; tone: string }> = {
     moves: 'Se mueve más',
     tone: 'text-warn border-warn/30 bg-warn/10',
   },
-  DOGE: {
-    text: 'Nació en 2013 como una broma con la imagen de un perro y hoy es de las más populares. Cada moneda cuesta centavos: con $1 ya tienes varias.',
+  SOL: {
+    text: 'Una de las redes más rápidas y baratas del mundo. Su moneda, SOL, se usa para pagos y miles de aplicaciones, y es de las que más ha crecido en los últimos años.',
     moves: 'Se mueve mucho',
     tone: 'text-bad border-bad/30 bg-bad/10',
   },
@@ -43,13 +43,13 @@ const BENEFITS = [
   { icon: ShoppingBag, title: 'Comprar es como una tienda en línea', text: 'Eliges la moneda, escribes cuánto en dólares y confirmas. Listo.' },
   { icon: Zap, title: 'Desde $1 y sin comisiones', text: 'No necesitas mucho dinero para empezar a invertir.' },
   { icon: Activity, title: 'Precios en vivo cada 5 segundos', text: 'Mira cómo se mueve tu dinero y vende cuando tú quieras.' },
-  { icon: Gift, title: '$10,000 para practicar', text: 'Aprende sin miedo antes de arriesgar tu propio dinero.' },
+  { icon: Gift, title: '$1,000 de prueba', text: 'Prueba CUTTERPAY sin miedo antes de usar tu propio dinero.' },
   { icon: ShieldCheck, title: 'Protegido con código', text: 'Cada compra y venta se confirma con un código que llega a tu correo.' },
 ]
 
 const STEPS = [
-  { icon: UserPlus, title: 'Crea tu cuenta', text: 'En un minuto, con tu nombre, correo y contraseña. Recibes $10,000 para practicar.' },
-  { icon: MousePointerClick, title: 'Elige tu moneda', text: 'Bitcoin, Ethereum o Dogecoin. Escribe cuánto quieres en dólares y confirma.' },
+  { icon: UserPlus, title: 'Crea tu cuenta', text: 'En un minuto, con tu nombre, correo y contraseña. Recibes $1,000 de prueba.' },
+  { icon: MousePointerClick, title: 'Elige tu moneda', text: 'Bitcoin, Ethereum o Solana. Escribe cuánto quieres en dólares y confirma.' },
   { icon: TrendingUp, title: 'Mira cómo se mueve', text: 'Sigue su precio en vivo. Vende cuando quieras y el dinero vuelve a tu saldo.' },
 ]
 
@@ -106,13 +106,16 @@ export default function Landing() {
               <span className="flex -space-x-2">
                 {coins.map((c) => <span key={c.symbol} className="rounded-full ring-2 ring-bg"><CoinIcon symbol={c.symbol} color={c.color} size={26} /></span>)}
               </span>
-              <span className="font-semibold">Bitcoin · Ethereum · Dogecoin</span>
+              <span className="font-semibold">Bitcoin · Ethereum · Solana</span>
             </div>
+            <p className="-mt-2 max-w-md text-base font-semibold text-fg/90">
+              Las 3 monedas digitales más conocidas del mundo. <span className="text-ok">Empieza a invertir desde solo $1.</span>
+            </p>
             <h1 className="text-[2.5rem] font-extrabold leading-[1.05] sm:text-6xl lg:text-7xl">
               Haz crecer tu dinero <span className="text-aurora">así de sencillo</span>
             </h1>
             <p className="mx-auto max-w-lg text-lg text-muted lg:mx-0">
-              Saca tus dólares de la cuenta del banco y ponlos en <b className="text-fg">monedas digitales</b>. Compra desde $1, en 3 pasos y sin palabras raras.
+              Genera una <b className="text-fg">nueva fuente de ingresos</b> y pon a trabajar tu dinero en <b className="text-fg">monedas digitales</b>, mientras tú sigues con tu día.
             </p>
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
               <Link to="/registro" className="w-full sm:w-auto">
@@ -125,7 +128,7 @@ export default function Landing() {
               </Link>
             </div>
             <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-base text-muted lg:justify-start lg:text-sm">
-              {['$10,000 para practicar', 'Desde $1', 'Sin comisiones'].map((t) => (
+              {['$1,000 de prueba', 'Desde $1', 'Sin comisiones'].map((t) => (
                 <li key={t} className="flex items-center gap-1.5"><Check className="h-4 w-4 text-ok" /> {t}</li>
               ))}
             </ul>
@@ -254,7 +257,7 @@ export default function Landing() {
               )}
               <p className="mt-2 text-sm text-muted">Tus dólares dejan de dormir: se mueven con el mercado y tú decides cuándo vender.</p>
             </div>
-            <p className="text-xs text-muted">El precio de las monedas digitales sube y baja. Por eso te damos $10,000 para practicar antes de usar tu dinero. Inflación de ejemplo: 3% al año.</p>
+            <p className="text-xs text-muted">El precio de las monedas digitales sube y baja. Por eso te damos $1,000 de prueba antes de usar tu dinero. Inflación de ejemplo: 3% al año.</p>
           </div>
         </section>
 
@@ -306,7 +309,7 @@ export default function Landing() {
           <div className="relative flex flex-col items-center gap-5">
             <LogoIcon size={72} animated glow />
             <h2 className="max-w-2xl text-3xl font-bold sm:text-5xl">Tu primera moneda digital está a un minuto</h2>
-            <p className="max-w-md text-muted">Crea tu cuenta, recibe $10,000 para practicar y compra Bitcoin, Ethereum o Dogecoin en tres pasos.</p>
+            <p className="max-w-md text-muted">Crea tu cuenta, recibe $1,000 de prueba y compra Bitcoin, Ethereum o Solana en tres pasos.</p>
             <Link to="/registro">
               <Button size="lg">Crear mi cuenta gratis <ArrowRight className="h-5 w-5" /></Button>
             </Link>

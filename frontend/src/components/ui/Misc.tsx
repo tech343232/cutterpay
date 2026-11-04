@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
-const GLYPHS: Record<string, string> = { BTC: '₿', ETH: 'Ξ', DOGE: 'Ð' }
+const GLYPHS: Record<string, string> = { BTC: '₿', ETH: 'Ξ', SOL: '◎' }
 
 export function CoinIcon({ symbol, color, size = 36 }: { symbol: string; color: string; size?: number }) {
   return (

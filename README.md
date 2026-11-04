@@ -112,4 +112,4 @@ Desde ahí, **cada `git push` a `main` publica solo**.
 Si algo falla:
 - `/api` responde 502 o error: revisa *Logs → Functions*. Si dice `relation "usuarios" does not exist`, falta el paso 5.
 - La sesión se cierra sola después de publicar: es normal si cambiaste `JWT_SECRET`; vuelve a iniciar sesión.
-- Para reiniciar la base de la nube: `npm run db:setup-remote -- --force`.
+- Para reiniciar la base de la nube (borra todo y carga los datos de ejemplo): `cd backend` y luego `node scripts/setup-remote-db.js --force` (con `$env:DATABASE_URL` puesto).

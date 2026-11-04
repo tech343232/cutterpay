@@ -17,7 +17,7 @@ function mulberry32(a) {
 export const COINS = [
   { name: 'Bitcoin', symbol: 'BTC', color: '#F7931A', base: 68420.5, vol: 0.004 },
   { name: 'Ethereum', symbol: 'ETH', color: '#627EEA', base: 3512.8, vol: 0.006 },
-  { name: 'Dogecoin', symbol: 'DOGE', color: '#C2A633', base: 0.1642, vol: 0.012 },
+  { name: 'Solana', symbol: 'SOL', color: '#9945FF', base: 152.3, vol: 0.009 },
 ];
 
 export const FUNDS = [
@@ -152,11 +152,12 @@ export async function seed(db) {
 
     if (u.trades === 'sofia') {
       // La historia de Sofía del documento de lógica
-      doTrade('compra', 'BTC', 0.05, now - 2.6 * DAY);
-      doTrade('compra', 'ETH', 0.8, now - 2.1 * DAY);
-      doTrade('venta', 'BTC', 0.02, now - 1.2 * DAY);
-      doTrade('compra', 'DOGE', 5000, now - 0.7 * DAY);
-      doTrade('venta', 'ETH', 0.25, now - 0.3 * DAY);
+      // Con $1,000 de prueba: compras pequeñas, como haría una principiante
+      doTrade('compra', 'BTC', 0.004, now - 2.6 * DAY);
+      doTrade('compra', 'ETH', 0.06, now - 2.1 * DAY);
+      doTrade('venta', 'BTC', 0.0015, now - 1.2 * DAY);
+      doTrade('compra', 'SOL', 0.8, now - 0.7 * DAY);
+      doTrade('venta', 'ETH', 0.02, now - 0.3 * DAY);
     } else {
       const times = Array.from({ length: u.trades }, () => created + rand() * (now - created - 3600000)).sort((a, b) => a - b);
       for (const t of times) {
@@ -182,8 +183,8 @@ export async function seed(db) {
     // Depósitos en fondos (crecen solos desde la fecha del depósito)
     const deposits = [];
     if (u.trades === 'sofia') {
-      deposits.push({ slug: 'flexible', amount: 1500, t: now - 3 * DAY }, { slug: 'plus', amount: 800, t: now - 1.5 * DAY });
-    } else if (st.balance > 500 && rand() < 0.85) {
+      deposits.push({ slug: 'flexible', amount: 150, t: now - 3 * DAY }, { slug: 'plus', amount: 80, t: now - 1.5 * DAY });
+    } else if (st.balance > 50 && rand() < 0.85) {
       const f = FUNDS[Math.floor(rand() * FUNDS.length)];
       deposits.push({ slug: f.slug, amount: round2(st.balance * (0.1 + rand() * 0.2)), t: created + rand() * (now - created) });
     }

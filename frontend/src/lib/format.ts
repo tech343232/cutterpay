@@ -4,7 +4,7 @@ const usdFmt = (min: number, max: number) =>
 const usd2 = usdFmt(2, 2)
 const usd4 = usdFmt(4, 4)
 
-/** Dólares. Precios menores a $1 (como DOGE) muestran 4 decimales. */
+/** Dólares. Precios menores a $1 (centavos) muestran 4 decimales. */
 export const usd = (n: number, opts: { price?: boolean } = {}) =>
   opts.price && Math.abs(n) < 1 ? usd4.format(n) : usd2.format(n)
 

@@ -12,4 +12,4 @@ export const TEST_CARDS = [
   { number: '4000 0000 0000 0002', result: 'Rechazada' },
 ]
 
-export const INITIAL_BALANCE = 10000
+export const INITIAL_BALANCE = 1000

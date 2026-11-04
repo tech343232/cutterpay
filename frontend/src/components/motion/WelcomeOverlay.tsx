@@ -78,7 +78,7 @@ export function WelcomeOverlay() {
               <p className="font-display text-3xl font-extrabold sm:text-4xl">
                 {data.kind === 'registro' ? `¡Tu cuenta está lista, ${data.name}!` : `¡Qué bueno verte, ${data.name}!`}
               </p>
-              <p className="mt-2 text-muted">{data.kind === 'registro' ? 'Tus $10,000 ya te esperan para crecer.' : 'Tu dinero siguió creciendo mientras no estabas.'}</p>
+              <p className="mt-2 text-muted">{data.kind === 'registro' ? 'Tus $1,000 de prueba ya te esperan.' : 'Tu dinero siguió creciendo mientras no estabas.'}</p>
             </motion.div>
           </div>
         </motion.div>

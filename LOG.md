@@ -13,7 +13,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ### Diseño y textos
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
-- **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Dogecoin)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
+- **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Solana; saldo de prueba $1,000)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
 - **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
 - **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código. *(O.T.I.S)*
 - **Los encabezados muestran solo el nombre**; la explicación va en un «?» (`components/ui/Help.tsx`). *(SOHO)*
@@ -34,6 +34,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Solana en lugar de Dogecoin, $1,000 de prueba y nueva promesa
+- Pedido: el héroe debe hablar de generar una nueva fuente de ingresos y poner a trabajar el dinero en monedas digitales; cambiar Dogecoin por Solana con una línea de por qué invertir y desde cuánto; saldo de prueba de $1,000 en vez de $10,000.
+- Entregado: monedas BTC, ETH y SOL (base, landing, historia animada, filtros); «Las 3 monedas digitales más conocidas del mundo. Empieza a invertir desde solo $1.»; nueva promesa; saldo inicial $1,000 (config, .env, textos); seed de Sofía ajustado a compras pequeñas; base local y Neon regeneradas.
+- Pendiente: nada.
 
 ### 2026-11-03 · Celular legible para 40+ y primera pantalla con logo grande
 - Pedido: la versión móvil debe leerse fácil para personas de 40 años; la promesa centrada en celular; logo de CUTTERPAY grande y centrado con animación CSS en el ícono y en el nombre.
@@ -81,6 +86,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Pendiente: nada.
 
 ## Errores
+
+### 2026-11-03 · Scripts · `npm run db:setup-remote -- --force` no reiniciaba la nube
+- Causa: el script raíz pasa los argumentos a otro `npm run`, y npm se queda con `--force` como opción suya.
+- Solución: ejecutar directo `node scripts/setup-remote-db.js --force` dentro de `backend`; README corregido.
+- Regla para el futuro: argumentos de scripts que se reenvían entre workspaces se prueban ejecutando el script de Node directo.
 
 ### 2026-11-03 · Backend · El registro en línea decía «Algo salió mal en el servidor»
 - Qué pasó: al crear cuenta en Netlify salía un error genérico.
