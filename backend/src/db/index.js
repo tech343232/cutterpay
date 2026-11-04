@@ -14,7 +14,9 @@ const REMOTE_URL = (process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL
   .trim()
   .replace(/^["']|["']$/g, '')
   .replace(/([?&])channel_binding=[^&]*(&|$)/, (_, sep, end) => (end ? sep : ''))
-  .replace(/[?&]$/, '');
+  .replace(/[?&]$/, '')
+  // Neon tiene certificado válido: verify-full es lo que require hace hoy en pg, sin el aviso
+  .replace(/sslmode=require/, 'sslmode=verify-full');
 export const isRemote = Boolean(REMOTE_URL);
 
 let dbPromise = null;
