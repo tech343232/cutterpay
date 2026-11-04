@@ -9,7 +9,12 @@ import { config } from '../config.js';
 import { seed } from './seed.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const REMOTE_URL = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL || '';
+// Neon agrega "channel_binding=require" a la cadena; el driver "pg" no lo necesita, así que se quita.
+const REMOTE_URL = (process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL || '')
+  .trim()
+  .replace(/^["']|["']$/g, '')
+  .replace(/([?&])channel_binding=[^&]*(&|$)/, (_, sep, end) => (end ? sep : ''))
+  .replace(/[?&]$/, '');
 export const isRemote = Boolean(REMOTE_URL);
 
 let dbPromise = null;
