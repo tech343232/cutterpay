@@ -3,6 +3,7 @@ import { MailCheck, ShieldCheck, RotateCw } from 'lucide-react'
 import { api, ApiError } from '@/lib/api'
 import { Button } from '@/components/ui/Button'
 import { CodeInput } from './CodeInput'
+import { FloatingArt } from '@/components/motion/FloatingArt'
 
 export interface Challenge {
   needsCode: true
@@ -81,14 +82,12 @@ export function VerifyCode({ challenge, onSubmit, onChallenge, resendPath, submi
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-start gap-3">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-aurora text-white"><MailCheck className="h-6 w-6" /></span>
-        <div>
-          <p className="font-display text-xl font-bold">{title}</p>
-          <p className="text-sm text-muted">
-            {hint ?? 'Te enviamos un código de 6 dígitos a'} <b className="text-fg">{challenge.email}</b>. Cópialo y pégalo aquí.
-          </p>
-        </div>
+      <div className="flex flex-col items-center gap-1 text-center">
+        <FloatingArt name="shield" size={150} className="-my-4" />
+        <p className="flex items-center gap-2 font-display text-2xl font-bold"><MailCheck className="h-5 w-5 text-primary" /> {title}</p>
+        <p className="max-w-sm text-sm text-muted">
+          {hint ?? 'Te enviamos un código de 6 dígitos a'} <b className="text-fg">{challenge.email}</b>. Cópialo y pégalo aquí.
+        </p>
       </div>
 
       {challenge.demoCode && (

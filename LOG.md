@@ -31,6 +31,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Peticiones
 
+### 2026-11-03 · Registro más estético con imágenes generadas por Codex
+- Pedido: el registro no se veía atractivo; agregar motion graphic e imágenes sofisticadas (generadas con Codex) para que un principiante se sienta apegado desde el primer minuto.
+- Entregado: 3 ilustraciones 3D generadas con Codex CLI (`frontend/public/img/`: grow, shield, gift; 35–43 KB cada una), componente `FloatingArt` (flota, halo que respira, partículas); registro dentro de tarjeta de vidrio con borde animado, pasos «Tus datos → Confirma tu correo → ¡A invertir!» y banner de regalo; escudo 3D en el paso del código; ilustraciones dentro de la historia animada.
+- Pendiente: nada.
+
 ### 2026-11-03 · Código por correo para entrar y para mover dinero
 - Pedido: enviar un código al correo registrado para confirmar compras, ventas y retiros, y también al iniciar sesión (y verificar que el correo es real).
 - Entregado: códigos de 6 dígitos (hash, 10 min, 5 intentos, un solo uso, atados a la operación exacta) en registro, login, compra, venta, invertir y retirar; casillas que aceptan pegar el código y reenvío con espera de 30 s; correo con diseño de marca; tabla `codigos_verificacion` con migración automática (local y Neon); cuentas demo muestran su código en pantalla.
@@ -57,6 +62,17 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Pendiente: nada.
 
 ## Errores
+
+### 2026-11-03 · Backend · El registro en línea decía «Algo salió mal en el servidor»
+- Qué pasó: al crear cuenta en Netlify salía un error genérico.
+- Causa: el envío de correos aún no estaba configurado y el servidor respondía 503 con un mensaje claro, pero el manejador de errores ocultaba TODO mensaje 5xx.
+- Solución: los `HttpError` llevan `expose = true` y su mensaje se muestra; si alguien se registró sin confirmar el correo, al volver a registrarse se le reenvía el código.
+- Regla para el futuro: los avisos pensados para el usuario se muestran siempre, aunque sean 5xx; solo se ocultan los errores inesperados.
+
+### 2026-11-03 · Diseño · Recuadro negro alrededor de las imágenes 3D
+- Causa: `mix-blend-mode: screen` no funciona dentro de un contenedor animado (crea su propio contexto).
+- Solución: máscara radial que desvanece los bordes de la imagen.
+- Regla para el futuro: imágenes con fondo oscuro → máscara radial además del modo de mezcla.
 
 ### 2026-11-03 · Netlify · «Algo salió mal en el servidor» al crear la cuenta en línea
 - Qué pasó: en `cutterpay.netlify.app` toda la API respondía error; en local funcionaba.

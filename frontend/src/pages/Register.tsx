@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { AlertCircle, Check } from 'lucide-react'
+import { AlertCircle, Check, Lock } from 'lucide-react'
 import { registerSchema } from '@shared/validation.js'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/Input'
 import { cn } from '@/lib/utils'
 import { AuthLayout } from './AuthLayout'
 import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
+import { FloatingArt } from '@/components/motion/FloatingArt'
 import { primeAudio, playWelcome } from '@/lib/sound'
 import { markWelcome } from '@/components/motion/WelcomeOverlay'
 
@@ -70,6 +71,24 @@ export default function Register() {
         </>
       }
     >
+      {/* Pasos del registro */}
+      <ol className="flex items-center gap-2" aria-label="Pasos para crear tu cuenta">
+        {['Tus datos', 'Confirma tu correo', '¡A invertir!'].map((s, i) => {
+          const step = challenge ? 1 : 0
+          return (
+            <li key={s} className="flex flex-1 items-center gap-2">
+              <span className={cn('grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold transition', i < step ? 'bg-ok text-bg' : i === step ? 'bg-aurora text-white shadow-glow' : 'bg-surface2 text-muted')}>
+                {i < step ? <Check className="h-4 w-4" /> : i + 1}
+              </span>
+              <span className={cn('hidden text-xs font-semibold sm:block', i === step ? 'text-fg' : 'text-muted')}>{s}</span>
+              {i < 2 && <span className={cn('h-px flex-1', i < step ? 'bg-ok' : 'bg-line')} />}
+            </li>
+          )
+        })}
+      </ol>
+
+      <div className="relative rounded-4xl bg-surface/80 p-5 shadow-card backdrop-blur sm:p-7">
+        <span className="cp-glow-ring" />
       {challenge ? (
         <VerifyCode
           challenge={challenge}
@@ -88,7 +107,15 @@ export default function Register() {
           }}
         />
       ) : (
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="relative flex flex-col gap-4">
+        {/* Regalo de bienvenida */}
+        <div className="relative -mt-1 mb-1 flex items-center gap-3 overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/20 via-magenta/10 to-transparent p-3 pr-4">
+          <FloatingArt name="gift" size={84} className="-my-3 -ml-2 shrink-0" />
+          <div className="min-w-0">
+            <p className="text-xs font-bold uppercase tracking-wider text-primary">Regalo de bienvenida</p>
+            <p className="font-display text-lg font-bold leading-tight">{usd(INITIAL_BALANCE)} para empezar a invertir hoy</p>
+          </div>
+        </div>
         {serverError && (
           <div role="alert" className="flex items-start gap-2 rounded-2xl border border-bad/30 bg-bad/10 p-3 text-sm text-bad">
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
@@ -115,9 +142,10 @@ export default function Register() {
         <Button type="submit" size="lg" loading={isSubmitting} className="mt-2">
           {isSubmitting ? 'Creando tu cuenta…' : 'Crear cuenta'}
         </Button>
-        <p className="text-center text-xs text-muted">Nunca te pediremos datos de tu banco para empezar.</p>
+        <p className="flex items-center justify-center gap-1.5 text-center text-xs text-muted"><Lock className="h-3.5 w-3.5" /> Tus datos viajan cifrados. Nunca te pediremos datos de tu banco.</p>
       </form>
       )}
+      </div>
     </AuthLayout>
   )
 }

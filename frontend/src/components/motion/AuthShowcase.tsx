@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Check, Gift, MousePointer2 } from 'lucide-react'
 import { LogoIcon } from '@/components/brand/Logo'
 import { cn } from '@/lib/utils'
+import { FloatingArt } from './FloatingArt'
 
 const SCENE_MS = 3800
 
@@ -40,6 +41,7 @@ const pop = { initial: { opacity: 0, y: 16, scale: 0.96 }, animate: { opacity: 1
 function SceneGift() {
   return (
     <motion.div {...pop} className="flex w-full flex-col gap-4">
+      <FloatingArt name="gift" size={150} className="mx-auto -mb-8" />
       <div className="relative overflow-hidden rounded-3xl bg-aurora p-5 text-white shadow-glow">
         <motion.div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/20 blur-2xl" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 2.4, repeat: Infinity }} />
         <p className="text-sm font-semibold text-white/80">Saldo para practicar</p>
@@ -95,6 +97,7 @@ function SceneChoose() {
 function SceneInvest() {
   return (
     <motion.div {...pop} className="flex w-full flex-col items-center gap-4">
+      <FloatingArt name="shield" size={130} className="-mb-8" />
       <div className="w-full rounded-3xl border border-line bg-surface p-5">
         <p className="text-sm text-muted">¿Cuánto quieres invertir?</p>
         <p className="font-display text-5xl font-bold">
@@ -130,6 +133,7 @@ function SceneInvest() {
 function SceneGrow() {
   return (
     <motion.div {...pop} className="flex w-full flex-col gap-4">
+      <FloatingArt name="grow" size={140} className="mx-auto -mb-8" />
       <div className="rounded-3xl border border-line bg-surface p-5">
         <div className="flex items-end justify-between">
           <div>
@@ -206,7 +210,7 @@ export function AuthShowcase({ compact = false }: { compact?: boolean }) {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className={cn('relative flex items-start', compact ? 'min-h-[230px]' : 'min-h-[300px]')}>
+      <div className={cn('relative flex items-start', compact ? 'min-h-[330px]' : 'min-h-[470px]')}>
         <AnimatePresence mode="wait">
           <Scene key={i} />
         </AnimatePresence>

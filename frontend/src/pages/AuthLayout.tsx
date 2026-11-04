@@ -11,7 +11,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
         <Link to="/" className="w-fit">
           <Logo size={34} />
         </Link>
-        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 py-8">
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-start gap-6 py-6 lg:justify-center lg:py-8">
           <div className="rounded-4xl border border-line bg-surface/70 p-5 lg:hidden">
             <AuthShowcase compact />
           </div>
