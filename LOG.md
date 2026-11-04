@@ -126,6 +126,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Errores
 
+### 2026-11-03 · Registro · "El envío de correos aún no está configurado"
+- Qué pasó: en Netlify nadie podía crear cuenta porque faltan las variables SMTP de Gmail.
+- Solución: mientras el correo no esté configurado, el código se muestra en pantalla con el aviso «Versión beta»; con las variables SMTP puestas, el código solo llega al correo.
+- Regla para el futuro: una función opcional sin configurar nunca bloquea el registro; avisa y sigue.
+
 ### 2026-11-03 · Responsive · Logins de tester/admin y pestañas de Billetera se salían en celular
 - Qué pasó: en 360 px /login/tester medía 490 px, /login/admin 421 px y las pestañas de Billetera 426 px.
 - Causa: la cuadrícula del login (`grid` sin columnas) toma el ancho mínimo de su contenido, y el encabezado de credenciales no podía partirse; las pestañas tenían íconos + texto + mucho relleno.

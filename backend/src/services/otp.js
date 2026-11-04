@@ -2,7 +2,7 @@
 // Se usan para: confirmar el correo al registrarse, entrar (login) y autorizar compras, ventas y retiros.
 // El código nunca se guarda en texto: solo su hash. Vence en 10 minutos y permite 5 intentos.
 import crypto from 'node:crypto';
-import { query, isRemote } from '../db/index.js';
+import { query } from '../db/index.js';
 import { config } from '../config.js';
 import { HttpError, badRequest } from '../lib/errors.js';
 import { sendCode, mailConfigured } from './mailer.js';
@@ -45,7 +45,9 @@ async function deliver({ id, code, user, purpose, detail }) {
   const email = user.correo;
   const demo = isDemo(email);
   // Mostrar el código en pantalla solo si es una cuenta de demostración o si estamos en local sin correo configurado
-  const showCode = demo || (!mailConfigured && !isRemote);
+  // Mientras el correo no esté configurado (beta), el código se muestra en pantalla para no bloquear a nadie.
+  // En cuanto existan las variables SMTP en Netlify, el código solo llega al correo.
+  const showCode = demo || !mailConfigured;
   if (!demo) {
     try {
       await sendCode({ to: email, name: user.nombre.split(' ')[0], code, purpose, detail });
@@ -53,14 +55,13 @@ async function deliver({ id, code, user, purpose, detail }) {
       console.error('[correo] No se pudo enviar:', e.message);
       if (!showCode) throw new HttpError(503, 'No pudimos enviar el código a tu correo. Intenta de nuevo en un momento.');
     }
-    if (!mailConfigured && isRemote) throw new HttpError(503, 'El envío de correos aún no está configurado. Avisa al administrador.');
   }
   return {
     needsCode: true,
     challengeId: id,
     email: maskEmail(email),
     expiresInMin: config.otpTtlMin,
-    ...(showCode ? { demoCode: code } : {}),
+    ...(showCode ? { demoCode: code, codeOnScreen: demo ? 'demo' : 'beta' } : {}),
   };
 }
 

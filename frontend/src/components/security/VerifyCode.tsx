@@ -12,6 +12,8 @@ export interface Challenge {
   expiresInMin: number
   /** Solo cuentas de demostración (sin buzón real) o local sin correo configurado */
   demoCode?: string
+  /** Por qué el código se ve en pantalla: cuenta de demostración o beta sin correo configurado */
+  codeOnScreen?: 'demo' | 'beta'
 }
 
 interface Props {
@@ -93,7 +95,7 @@ export function VerifyCode({ challenge, onSubmit, onChallenge, resendPath, submi
       {challenge.demoCode && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-warn/30 bg-warn/10 p-3 text-sm">
           <span>
-            Cuenta de demostración: tu código es <b className="tabular font-display text-base tracking-widest">{challenge.demoCode}</b>
+            {challenge.codeOnScreen === 'beta' ? 'Versión beta: mientras activamos el envío por correo, tu código es' : 'Cuenta de demostración: tu código es'} <b className="tabular font-display text-base tracking-widest">{challenge.demoCode}</b>
           </span>
           <button type="button" onClick={() => { setCode(challenge.demoCode!); submit(challenge.demoCode!) }} className="rounded-xl border border-warn/40 px-3 py-1 text-xs font-bold text-warn hover:bg-warn/10">
             Usar código
