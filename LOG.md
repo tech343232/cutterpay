@@ -12,6 +12,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ## Reglas aprendidas
 
 ### Diseño y textos
+- **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
 - **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Dogecoin)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
 - **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
 - **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código. *(O.T.I.S)*
@@ -33,6 +34,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Celular legible para 40+ y primera pantalla con logo grande
+- Pedido: la versión móvil debe leerse fácil para personas de 40 años; la promesa centrada en celular; logo de CUTTERPAY grande y centrado con animación CSS en el ícono y en el nombre.
+- Entregado: en celular la letra base pasa a 17.5 px (todo crece ~10%), texto chico mínimo 13 px, gris secundario con más contraste; héroe móvil centrado con logo de 112 px animado y nombre con brillo que recorre las letras; botones a lo ancho. Prueba 360 px: 14/14 sin desborde.
+- Pendiente: nada.
 
 ### 2026-11-03 · Todo enfocado en monedas digitales (como pide el PDF)
 - Pedido: la landing trataba la cripto como algo extra («¿Quieres más emoción?»). El proyecto del PDF es de criptomonedas: el mensaje debe ser «haz crecer tu dinero así de sencillo con monedas digitales», para el principiante que tiene sus dólares quietos en el banco, destacando Bitcoin, Ethereum y Dogecoin.

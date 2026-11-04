@@ -78,9 +78,12 @@ export default function Landing() {
 
       <div className="relative mx-auto flex max-w-6xl flex-col px-4 sm:px-6">
         <header className="flex items-center justify-between gap-3 py-5">
-          <Logo />
+          <Logo className="hidden lg:inline-flex" />
+          <Link to="/login" className="rounded-xl px-1 py-2 text-base font-semibold text-fg lg:hidden">
+            Iniciar sesión
+          </Link>
           <div className="flex items-center gap-2">
-            <Link to="/login" className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-muted hover:text-fg sm:block">
+            <Link to="/login" className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-muted hover:text-fg lg:block">
               Iniciar sesión
             </Link>
             <Link to="/registro">
@@ -91,30 +94,37 @@ export default function Landing() {
 
         {/* ---------- Héroe ---------- */}
         <section className="grid items-center gap-12 py-10 lg:grid-cols-[1.05fr_.95fr] lg:py-16">
-          <motion.div initial={{ y: 18 }} animate={{ y: 0 }} transition={{ duration: 0.6 }} className="flex flex-col gap-6">
+          <motion.div initial={{ y: 18 }} animate={{ y: 0 }} transition={{ duration: 0.6 }} className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
+            {/* Logo grande solo en celular: lo primero que se ve */}
+            <div className="cp-pop-in flex flex-col items-center gap-3 lg:hidden">
+              <LogoIcon size={112} animated glow />
+              <span className="font-display text-5xl font-extrabold lowercase tracking-[-0.04em]">
+                <span className="cp-wordmark-shine">cutter</span><span className="text-aurora">pay</span>
+              </span>
+            </div>
             <div className="flex w-fit items-center gap-2 rounded-full border border-line bg-surface/70 py-1 pl-1 pr-3 text-sm backdrop-blur">
               <span className="flex -space-x-2">
                 {coins.map((c) => <span key={c.symbol} className="rounded-full ring-2 ring-bg"><CoinIcon symbol={c.symbol} color={c.color} size={26} /></span>)}
               </span>
               <span className="font-semibold">Bitcoin · Ethereum · Dogecoin</span>
             </div>
-            <h1 className="text-[2.6rem] font-extrabold leading-[1.02] sm:text-6xl lg:text-7xl">
+            <h1 className="text-[2.5rem] font-extrabold leading-[1.05] sm:text-6xl lg:text-7xl">
               Haz crecer tu dinero <span className="text-aurora">así de sencillo</span>
             </h1>
-            <p className="max-w-lg text-lg text-muted">
+            <p className="mx-auto max-w-lg text-lg text-muted lg:mx-0">
               Saca tus dólares de la cuenta del banco y ponlos en <b className="text-fg">monedas digitales</b>. Compra desde $1, en 3 pasos y sin palabras raras.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/registro">
-                <Button size="lg">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
+              <Link to="/registro" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full text-lg sm:w-auto sm:text-base">
                   Crear mi cuenta gratis <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link to="/login">
-                <Button size="lg" variant="secondary">Ya tengo cuenta</Button>
+              <Link to="/login" className="w-full sm:w-auto">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto">Ya tengo cuenta</Button>
               </Link>
             </div>
-            <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
+            <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-base text-muted lg:justify-start lg:text-sm">
               {['$10,000 para practicar', 'Desde $1', 'Sin comisiones'].map((t) => (
                 <li key={t} className="flex items-center gap-1.5"><Check className="h-4 w-4 text-ok" /> {t}</li>
               ))}

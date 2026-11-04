@@ -10,7 +10,7 @@
     --surface-2: 28 24 41;
     --line: 42 37 64;
     --fg: 244 242 255;
-    --muted: 164 157 191;
+    --muted: 186 180 210;
     --primary: 155 140 255;
     --pink: 255 111 181;
     --magenta: 201 75 224;
@@ -20,6 +20,10 @@
     color-scheme: dark;
   }
   html, body, #root { min-height: 100%; }
+  /* Lectura cómoda en celular (pensado para 40+): todo crece ~10% porque la app usa rem */
+  @media (max-width: 640px) {
+    html { font-size: 17.5px; }
+  }
   body { overflow-x: hidden; }
   body {
     @apply bg-bg text-fg font-sans antialiased;
@@ -66,6 +70,17 @@
 .cp-glow-ring { position: absolute; inset: -2px; border-radius: inherit; padding: 2px; background: conic-gradient(from var(--cp-angle, 0deg), #FF6FB5, #C94BE0, #8A6BFF, #4FD1A5, #FF6FB5); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: cp-spin 6s linear infinite; pointer-events: none; }
 @property --cp-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 @keyframes cp-spin { to { --cp-angle: 360deg; } }
+
+/* Nombre CUTTERPAY con brillo que recorre las letras */
+.cp-wordmark-shine {
+  background: linear-gradient(100deg, #F4F2FF 0%, #F4F2FF 35%, #FF6FB5 45%, #C94BE0 50%, #8A6BFF 55%, #F4F2FF 65%, #F4F2FF 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: cp-shine-text 4.5s ease-in-out infinite;
+}
+@keyframes cp-shine-text { 0%, 20% { background-position: 100% 0; } 80%, 100% { background-position: 0% 0; } }
+.cp-pop-in { animation: cp-pop-in .9s cubic-bezier(.2,1.3,.4,1) both; }
+@keyframes cp-pop-in { from { transform: translateY(14px) scale(.9); } to { transform: none; } }
 
 /* ---------- Logo animado ---------- */
 .cp-logo .cp-blobs { transform-origin: 60px 60px; animation: cp-orbit 14s linear infinite; }
