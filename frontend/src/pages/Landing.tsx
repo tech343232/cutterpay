@@ -351,9 +351,9 @@ export default function Landing() {
             {/* Créditos */}
             <div className="flex flex-col items-center gap-3 md:items-start">
               <p className="text-xs font-bold uppercase tracking-wider text-primary">Creado por</p>
-              <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-aurora font-display text-lg font-bold text-white">S</span>
-                <div className="text-left">
+              <div className="flex flex-col items-center gap-3 md:flex-row">
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-aurora font-display text-xl font-bold text-white shadow-glow md:h-11 md:w-11 md:text-lg">S</span>
+                <div className="text-center md:text-left">
                   <p className="font-display text-lg font-bold leading-tight">Sofía del Carmen Ramírez Sagastume</p>
                   <p className="text-sm text-muted">Creadora de CUTTERPAY</p>
                 </div>
@@ -377,7 +377,7 @@ export default function Landing() {
               </Link>
             </div>
           </div>
-          <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-line pt-6 text-xs text-muted md:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-line pt-6 text-center text-xs text-muted md:flex-row md:text-left">
             <span>© {new Date().getFullYear()} CUTTERPAY · Simulador de Compra y Venta de Criptomonedas</span>
             <span>Saldos y precios de práctica, con fines educativos.</span>
           </div>

@@ -47,7 +47,7 @@ const STEP = 30 * 60 * 1000; // un punto cada 30 min
 const DAYS = 7;
 
 const USERS = [
-  { name: 'Sofía del Carmen Ramírez Sagastume', email: 'sofia@cutterpay.com', password: 'Sofia2025!', dpi: '3012456780101', trades: 'sofia' },
+  { name: 'Sofía del Carmen Ramírez Sagastume', email: 'sofia@cutterpay.com', password: 'Sofia#Cutter2025-Invierte!', dpi: '3012456780101', trades: 'sofia' },
   { name: 'Andrea Lucía López', email: 'andrea@cutterpay.com', password: 'Demo1234!', trades: 18 },
   { name: 'Mariana Pérez Gómez', email: 'mariana@cutterpay.com', password: 'Demo1234!', trades: 11 },
   { name: 'Diego Morales', email: 'diego@cutterpay.com', password: 'Demo1234!', trades: 24 },
@@ -109,7 +109,7 @@ export async function seed(db) {
   }
 
   // ---------- Admin ----------
-  const adminHash = await bcrypt.hash('Admin123!', 10);
+  const adminHash = await bcrypt.hash('CutterAdmin#2025$Semilla!', 10);
   await db.query(
     `INSERT INTO usuarios (nombre, correo, password_hash, rol, creado_en) VALUES ($1,$2,$3,'admin',$4)`,
     ['Admin CUTTERPAY', 'admin@cutterpay.com', adminHash, new Date(start - DAY).toISOString()],

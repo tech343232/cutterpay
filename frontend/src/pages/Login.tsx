@@ -6,7 +6,6 @@ import { AlertCircle } from 'lucide-react'
 import { loginSchema } from '@shared/validation.js'
 import { useAuth } from '@/context/AuthContext'
 import { ApiError } from '@/lib/api'
-import { DEMO_ACCOUNTS } from '@/lib/mock-data'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { AuthLayout } from './AuthLayout'
@@ -14,13 +13,22 @@ import { primeAudio, playWelcome } from '@/lib/sound'
 import { markWelcome } from '@/components/motion/WelcomeOverlay'
 import { firstName } from '@/lib/format'
 import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
+import { DemoCredentials } from '@/components/security/DemoCredentials'
 
 interface Form {
   email: string
   password: string
 }
 
-export default function Login() {
+type Variant = 'usuario' | 'tester' | 'admin'
+
+const TEXT: Record<Variant, { title: string; sub: string; badge?: string }> = {
+  usuario: { title: 'Hola de nuevo', sub: '' },
+  tester: { title: 'Acceso de prueba', sub: 'Entra con la cuenta de Sofía para probar compras, ventas y retiros.', badge: 'Tester' },
+  admin: { title: 'Panel de administración', sub: 'Acceso solo para administradores de CUTTERPAY.', badge: 'Administrador' },
+}
+
+export default function Login({ variant = 'usuario' }: { variant?: Variant }) {
   const { login, verify, endedReason } = useAuth()
   const [challenge, setChallenge] = useState<Challenge | null>(null)
   const navigate = useNavigate()
@@ -45,14 +53,21 @@ export default function Login() {
 
   return (
     <AuthLayout
-      title="Hola de nuevo"
+      title={TEXT[variant].title}
       subtitle={
-        <>
-          ¿No tienes cuenta?{' '}
-          <Link to="/registro" className="font-semibold text-primary hover:underline">
-            Créala gratis
-          </Link>
-        </>
+        variant === 'usuario' ? (
+          <>
+            ¿No tienes cuenta?{' '}
+            <Link to="/registro" className="font-semibold text-primary hover:underline">
+              Créala gratis
+            </Link>
+          </>
+        ) : (
+          <span className="flex flex-col gap-2">
+            <span className={`w-fit rounded-full border px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${variant === 'admin' ? 'border-warn/40 bg-warn/10 text-warn' : 'border-primary/40 bg-primary/10 text-primary'}`}>{TEXT[variant].badge}</span>
+            {TEXT[variant].sub}
+          </span>
+        )
       }
     >
       {challenge ? (
@@ -90,25 +105,16 @@ export default function Login() {
       </form>
       )}
 
-      {!challenge && <div className="rounded-2xl border border-dashed border-line p-4">
-        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted">Cuentas de demostración</p>
-        <div className="flex flex-wrap gap-2">
-          {DEMO_ACCOUNTS.map((a) => (
-            <button
-              key={a.email}
-              type="button"
-              onClick={() => {
-                setValue('email', a.email, { shouldValidate: true })
-                setValue('password', a.password, { shouldValidate: true })
-              }}
-              className="rounded-xl border border-line bg-surface px-3 py-2 text-left text-xs hover:border-primary/50"
-            >
-              <span className="block font-bold">{a.label}</span>
-              <span className="text-muted">{a.email}</span>
-            </button>
-          ))}
-        </div>
-      </div>}
+      {!challenge && variant !== 'usuario' && (
+        <DemoCredentials
+          only={variant}
+          onUse={(email, password) => {
+            setValue('email', email, { shouldValidate: true })
+            setValue('password', password, { shouldValidate: true })
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
+        />
+      )}
     </AuthLayout>
   )
 }

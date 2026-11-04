@@ -36,6 +36,8 @@
   /* Regla de diseño (LOG.md): ningún párrafo termina con 1 o 2 palabras solas en la última línea */
   p, li, dd, dt, label, figcaption, blockquote, td, th, button, a { text-wrap: pretty; }
   .balance { text-wrap: balance; }
+  /* Texto centrado: líneas parejas (nunca una línea larga arriba y 1–3 palabras abajo) */
+  .text-center p, p.text-center, .text-center li, .text-center span, .text-center dd { text-wrap: balance; }
   :focus-visible { @apply outline-none ring-2 ring-primary/70 ring-offset-2 ring-offset-bg; }
   ::selection { background: rgb(var(--primary) / 0.35); }
   input[type='number']::-webkit-inner-spin-button { -webkit-appearance: none; }
@@ -115,6 +117,15 @@
 .cp-rise-arrow { animation: cp-rise-arrow 1.6s ease-in-out infinite; }
 @keyframes cp-rise-arrow { 0%, 100% { transform: translateY(4px); opacity: .5; } 50% { transform: translateY(-4px); opacity: 1; } }
 .cp-blink { animation: cp-blink 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+/* anillo de rendimiento que se llena (pathLength=100, --pct = porcentaje) */
+.cp-ring { stroke-dasharray: 100; stroke-dashoffset: calc(100 - var(--pct)); animation: cp-ring 1.6s cubic-bezier(.3,.9,.3,1) both; }
+@keyframes cp-ring { from { stroke-dashoffset: 100; } }
+/* flecha que avanza */
+.cp-nudge { animation: cp-nudge 1.4s ease-in-out infinite; }
+@keyframes cp-nudge { 0%, 100% { transform: translateX(-2px); } 50% { transform: translateX(4px); } }
+/* billete que sale del cajero */
+.cp-cash-out { transform-box: fill-box; animation: cp-cash-out 2.6s ease-in-out infinite; }
+@keyframes cp-cash-out { 0%, 15% { transform: translateY(-14px); opacity: 0; } 40%, 80% { transform: translateY(8px); opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
 @keyframes cp-blink { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: .4; } }
 
 /* Nombre CUTTERPAY con brillo que recorre las letras */

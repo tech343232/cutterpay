@@ -30,6 +30,8 @@ export default function App() {
             <Route path="/demo/:mode" element={<DemoLogin />} />
             <Route element={<GuestRoute />}>
               <Route path="/login" element={<Login />} />
+              <Route path="/login/tester" element={<Login variant="tester" />} />
+              <Route path="/login/admin" element={<Login variant="admin" />} />
               <Route path="/registro" element={<Register />} />
             </Route>
 

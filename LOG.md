@@ -39,6 +39,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Peticiones
 
+### 2026-11-03 · Retiro propio, logins separados, fondos visuales y precios sin asustar
+- Pedido: pestaña de retiro (billetera digital, cuenta bancaria local, efectivo en cajero sin tarjeta); un login por tipo (usuario, tester, admin) con la contraseña semilla del admin oculta tras advertencia; contraseña larga para Sofía; paneles con menos texto y más visual; precios de monedas que no asusten («desde $1»); pie centrado en celular; párrafos centrados balanceados.
+- Entregado: tabla `retiros` + `POST /billetera/retirar` (DPI + código del correo atado al destino; cajero: código 8 dígitos + PIN, 24 h, enteros hasta $400); Billetera en pestañas Retirar / Recargar / Movimientos con ilustraciones SVG animadas; `/login` (usuario, sin cuentas), `/login/tester` (Sofía visible) y `/login/admin` (semilla oculta con advertencia de no compartir pantalla); claves nuevas `Sofia#Cutter2025-Invierte!` y `CutterAdmin#2025$Semilla!` (local y Neon); tarjeta de fondo con anillo animado y chips; selector de moneda con «Empieza desde $1» y «una moneda entera vale… tú compras un pedacito».
+- Pendiente: nada.
+
 ### 2026-11-03 · Comprar: primero qué moneda, guía de primera compra e íconos claros
 - Pedido: al tocar «Comprar monedas digitales» debe preguntar qué moneda y cuánto; todo pensado para principiantes y para crear hábito; guía (onboarding) la primera vez para comprar su primera cripto; el botón de comprar no debe llevar el ícono de Bitcoin para no confundir.
 - Entregado: paso «¿Qué moneda quieres comprar?» dentro del checkout (explicación simple, «Recomendada para empezar», cuánto se mueve, cambiar moneda); guía de 4 pasos (bienvenida → qué es una moneda digital → elige → con cuánto empiezas) que termina en la compra real con $10/$25/$50 y mensaje «¡Compraste tu primera moneda digital! Vuelve mañana…»; se muestra una sola vez (columna `onboarding_completado`, demo ya marcadas); íconos: bolsa de compras en el botón y monedas en «En cripto».
@@ -115,6 +120,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - Pendiente: nada.
 
 ## Errores
+
+### 2026-11-03 · Backend · Retiro a cajero fallaba (código 42P08)
+- Causa: PostgreSQL no pudo deducir el tipo de `$5` usado a la vez como valor y dentro de `CASE`.
+- Solución: calcular la fecha de vencimiento en Node y pasarla como parámetro aparte.
+- Regla para el futuro: no reutilizar el mismo parámetro `$n` en contextos de tipo distinto; calcular en Node.
 
 ### 2026-11-03 · Diseño · Texto de la solución partido en columnas
 - Causa: el párrafo era `flex`; al meter negritas el texto quedó en varios nodos y cada uno se volvió una columna.

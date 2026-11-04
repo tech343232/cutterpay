@@ -2,8 +2,8 @@
 
 /** Cuentas de prueba creadas por el seed de la base de datos. */
 export const DEMO_ACCOUNTS = [
-  { label: 'Sofía · usuaria', email: 'sofia@cutterpay.com', password: 'Sofia2025!' },
-  { label: 'Administrador', email: 'admin@cutterpay.com', password: 'Admin123!' },
+  { label: 'Sofía · usuaria de prueba', email: 'sofia@cutterpay.com', password: 'Sofia#Cutter2025-Invierte!' },
+  { label: 'Administrador', email: 'admin@cutterpay.com', password: 'CutterAdmin#2025$Semilla!' },
 ]
 
 /** Tarjetas de prueba de la pasarela simulada. */

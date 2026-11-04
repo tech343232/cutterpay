@@ -158,9 +158,17 @@ export function MoneyFlow({ open, onClose, mode, target: targetProp, available, 
                       {info?.recommended && <Badge tone="primary">Recomendada para empezar</Badge>}
                     </span>
                     {info && <span className="block text-sm text-muted">{info.short}</span>}
+                    {c.price != null && (
+                      <span className="mt-1 block text-xs text-muted">
+                        {c.price >= 1 ? <>Una moneda entera vale {usd(c.price)} · <b>tú compras solo un pedacito</b></> : <>Cada moneda vale {usd(c.price, { price: true })} · <b>con $1 tienes varias</b></>}
+                      </span>
+                    )}
                     {info && <span className={cn('mt-1 inline-block text-xs font-bold', info.tone === 'ok' ? 'text-ok' : info.tone === 'warn' ? 'text-warn' : 'text-bad')}>{info.moves}</span>}
                   </span>
-                  <span className="tabular shrink-0 text-right font-display font-bold">{c.price ? usd(c.price, { price: true }) : ''}</span>
+                  <span className="shrink-0 text-right">
+                    <span className="block text-xs font-semibold text-muted">Empieza</span>
+                    <span className="block font-display text-xl font-bold text-ok">desde $1</span>
+                  </span>
                 </motion.button>
               )
             })}

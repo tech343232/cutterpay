@@ -7,6 +7,11 @@ import { HttpError } from '../lib/errors.js';
 export function operationPayload(action, { params = {}, body = {} }) {
   const p = {};
   if (action.startsWith('crypto')) p.symbol = String(body.symbol || '').toUpperCase();
+  else if (action === 'cash-out') {
+    // El código autoriza el método Y el destino exacto (no se puede cambiar la cuenta después)
+    p.method = String(body.method || '');
+    p.dest = String(body.phone || body.account || 'cajero').replace(/[\s-]/g, '');
+  }
   else p.slug = String(params.slug || body.slug || '');
   for (const k of ['amountUsd', 'amount', 'quantity']) if (body[k] !== undefined) p[k] = Number(body[k]);
   if (body.all) p.all = true;

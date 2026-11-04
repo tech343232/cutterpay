@@ -143,6 +143,27 @@ export const rechargeSchema = z.object({
   cvc: z.string().trim().regex(/^\d{3}$/, 'El CVC tiene 3 dígitos.'),
 });
 
+/** Retirar dinero del saldo: a billetera digital, cuenta de banco o efectivo en cajero sin tarjeta. */
+export const CASHOUT_BANKS = ['Banco Industrial', 'Banrural', 'BAM', 'G&T Continental', 'BAC Credomatic', 'Banco Promerica']
+export const cashOutSchema = z.discriminatedUnion('method', [
+  z.object({
+    method: z.literal('billetera'),
+    amount: usdField(10, 'Puedes retirar desde $10.'),
+    phone: z.string().transform((s) => s.replace(/\D/g, '')).refine((s) => /^\d{8}$/.test(s), 'El número tiene 8 dígitos.'),
+  }),
+  z.object({
+    method: z.literal('banco'),
+    amount: usdField(10, 'Puedes retirar desde $10.'),
+    bank: z.enum(CASHOUT_BANKS, { errorMap: () => ({ message: 'Elige tu banco.' }) }),
+    account: z.string().transform((s) => s.replace(/[\s-]/g, '')).refine((s) => /^\d{6,20}$/.test(s), 'El número de cuenta tiene entre 6 y 20 dígitos.'),
+    holder: nameField,
+  }),
+  z.object({
+    method: z.literal('cajero'),
+    amount: usdField(10, 'Puedes retirar desde $10.').refine((v) => v <= 400, 'En cajero puedes retirar hasta $400 por vez.').refine((v) => Number.isInteger(v), 'En cajero el monto debe ser entero (sin centavos).'),
+  }),
+])
+
 export const userStatusSchema = z.object({
   status: z.enum(['activo', 'suspendido', 'baja'], {
     errorMap: () => ({ message: 'Estado no válido.' }),

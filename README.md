@@ -7,9 +7,9 @@ Proyecto final de Desarrollo Web · Universidad Mariano Gálvez de Guatemala.
 
 | Para qué | Link |
 |---|---|
-| Página pública (cualquier persona crea su cuenta) | https://cutterpay.netlify.app |
-| Probar compras y ventas (entra directo como Sofía) | https://cutterpay.netlify.app/demo/usuario |
-| Panel de administración (usuarios, suspender, reportes) | https://cutterpay.netlify.app/demo/admin |
+| Usuario (página pública y su login) | https://cutterpay.netlify.app/login |
+| Tester (cuenta de Sofía visible) | https://cutterpay.netlify.app/login/tester |
+| Administrador (contraseña semilla oculta) | https://cutterpay.netlify.app/login/admin |
 
 ## Arrancar en tu computadora
 
@@ -28,8 +28,8 @@ La primera vez se crea la base de datos sola, con datos de ejemplo.
 
 | Rol | Correo | Contraseña |
 |---|---|---|
-| Usuaria | sofia@cutterpay.com | Sofia2025! |
-| Administrador | admin@cutterpay.com | Admin123! |
+| Usuaria de prueba | sofia@cutterpay.com | Sofia#Cutter2025-Invierte! |
+| Administrador | admin@cutterpay.com | CutterAdmin#2025$Semilla! |
 | Usuarios demo | andrea@, mariana@, diego@, lucia@, valeria@cutterpay.com | Demo1234! |
 | Cuenta suspendida | carlos@cutterpay.com | Demo1234! |
 

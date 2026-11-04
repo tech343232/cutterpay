@@ -11,6 +11,21 @@ UPDATE usuarios SET onboarding_completado = TRUE WHERE correo LIKE '%@cutterpay.
 -- Un DPI solo puede pertenecer a una cuenta
 CREATE UNIQUE INDEX IF NOT EXISTS ux_usuarios_dpi ON usuarios (dpi) WHERE dpi IS NOT NULL;
 
+-- 14. Retiros de dinero (simulados): billetera digital, banco o cajero sin tarjeta
+CREATE TABLE IF NOT EXISTS retiros (
+  id           SERIAL PRIMARY KEY,
+  usuario_id   INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+  metodo       VARCHAR(10) NOT NULL CHECK (metodo IN ('billetera', 'banco', 'cajero')),
+  monto_usd    NUMERIC(18,2) NOT NULL CHECK (monto_usd > 0),
+  destino      VARCHAR(80) NOT NULL,
+  codigo_retiro VARCHAR(12),
+  pin          CHAR(4),
+  vence_en     TIMESTAMPTZ,
+  estado       VARCHAR(12) NOT NULL DEFAULT 'completado',
+  fecha        TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_retiros_usuario ON retiros (usuario_id, fecha DESC);
+
 -- 13. Códigos de verificación por correo (login, registro y operaciones con dinero)
 CREATE TABLE IF NOT EXISTS codigos_verificacion (
   id           VARCHAR(36)  PRIMARY KEY,

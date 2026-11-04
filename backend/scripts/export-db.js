@@ -7,7 +7,7 @@ import { query, closeDb } from '../src/db/index.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const out = path.resolve(here, '../../database/cutterpay.sql');
-const TABLES = ['usuarios', 'billeteras', 'criptomonedas', 'portafolio', 'transacciones', 'historial_precios', 'recargas', 'auditoria', 'fondos', 'inversiones_fondo', 'movimientos_fondo', 'tasas_referencia', 'codigos_verificacion'];
+const TABLES = ['usuarios', 'billeteras', 'criptomonedas', 'portafolio', 'transacciones', 'historial_precios', 'recargas', 'auditoria', 'fondos', 'inversiones_fondo', 'movimientos_fondo', 'tasas_referencia', 'codigos_verificacion', 'retiros'];
 
 const lit = (v) => {
   if (v === null || v === undefined) return 'NULL';
