@@ -3,6 +3,14 @@
 Simulador de compra y venta de criptomonedas con dinero ficticio.
 Proyecto final de Desarrollo Web · Universidad Mariano Gálvez de Guatemala.
 
+## Links
+
+| Para qué | Link |
+|---|---|
+| Página pública (cualquier persona crea su cuenta) | https://cutterpay.netlify.app |
+| Probar compras y ventas (entra directo como Sofía) | https://cutterpay.netlify.app/demo/usuario |
+| Panel de administración (usuarios, suspender, reportes) | https://cutterpay.netlify.app/demo/admin |
+
 ## Arrancar en tu computadora
 
 Requisito: **Node.js 20 o superior**. No hace falta instalar ninguna base de datos.

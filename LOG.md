@@ -36,6 +36,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 
 ## Peticiones
 
+### 2026-11-03 · 3 links para entrar
+- Pedido: links para entrar como usuario público, como administrador y para probar compras.
+- Entregado: página pública (`/`), prueba directa como Sofía (`/demo/usuario`) y admin directo (`/demo/admin`); entran sin escribir correo, contraseña ni código y solo funcionan con las cuentas de demostración. Probados en vivo.
+- Pendiente: nada.
+
 ### 2026-11-03 · Respetar el PDF (Dogecoin), héroe sin huecos en PC y créditos
 - Pedido: volver a Dogecoin porque así lo dice el PDF (la propuesta va en la forma, no en cambiar requisitos); quitar el espacio vacío del héroe en PC para que se vea sofisticado; en el pie decir quién lo creó (Sofía), de qué trabajo es, la universidad y el nombre del proyecto.
 - Entregado: BTC, ETH y DOGE otra vez (bases local y Neon regeneradas); héroe alineado arriba con fila «Mercado en vivo» en PC; pie con proyecto, «Creado por Sofía del Carmen Ramírez Sagastume», «Proyecto Final · Desarrollo Web · Facultad de Ingeniería · Universidad Mariano Gálvez de Guatemala» y accesos.
