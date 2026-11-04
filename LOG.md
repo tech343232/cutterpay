@@ -12,6 +12,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ## Reglas aprendidas
 
 ### Diseño y textos
+- **Siempre usar SVG propios animados con CSS** (trazos que se dibujan con `pathLength=1` + `stroke-dashoffset`, `transform-box: fill-box` para escalar partes). Degradados de trazos finos con `gradientUnits="userSpaceOnUse"`.
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
 - **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Solana; saldo de prueba $1,000)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
 - **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
@@ -34,6 +35,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · ¿Para quién es CUTTERPAY? (3 perfiles)
+- Pedido: mostrar para quién es ideal CUTTERPAY con 3 perfiles (profesional cansado de depender de su sueldo, independiente que quiere otra fuente de ingresos, dueño de negocio que quiere invertir sus ganancias), 3 dolores de cada uno desde el ángulo de nuevas fuentes de ingreso y dinero estancado; usar SVG animados con CSS en todo.
+- Entregado: sección `components/landing/Personas.tsx` con ilustración SVG propia por perfil (maletín con monedas que salen, laptop con barras y tendencia, tienda con monedas que se apilan), trazos que se dibujan solos, hover con borde animado, 3 dolores + solución por perfil y botón «Quiero que mi dinero trabaje».
+- Pendiente: nada.
 
 ### 2026-11-03 · Solana en lugar de Dogecoin, $1,000 de prueba y nueva promesa
 - Pedido: el héroe debe hablar de generar una nueva fuente de ingresos y poner a trabajar el dinero en monedas digitales; cambiar Dogecoin por Solana con una línea de por qué invertir y desde cuánto; saldo de prueba de $1,000 en vez de $10,000.

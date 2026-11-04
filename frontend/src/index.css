@@ -71,6 +71,30 @@
 @property --cp-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 @keyframes cp-spin { to { --cp-angle: 360deg; } }
 
+/* ---------- Ilustraciones SVG de los perfiles (todo con CSS) ---------- */
+.cp-persona { animation: cp-pop-in .8s cubic-bezier(.2,1.2,.4,1) backwards; transition: transform .4s ease, border-color .4s ease; }
+.cp-persona:hover { transform: translateY(-6px) rotate(-.4deg); border-color: rgb(var(--primary) / .5); }
+.cp-persona-art { overflow: visible; }
+/* línea que se dibuja sola (pathLength=1) */
+.cp-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: cp-draw 1.4s ease-out forwards; }
+@keyframes cp-draw { to { stroke-dashoffset: 0; } }
+/* línea de tendencia que se dibuja en bucle */
+.cp-draw-loop { stroke-dasharray: 1; stroke-dashoffset: 1; animation: cp-draw-loop 3.2s ease-in-out infinite; }
+@keyframes cp-draw-loop { 0% { stroke-dashoffset: 1; } 45%, 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1; } }
+/* monedas que salen volando del maletín */
+.cp-coin-fly { transform-box: fill-box; transform-origin: center; animation: cp-coin-fly 2.7s ease-in infinite; }
+@keyframes cp-coin-fly { 0% { transform: translateY(18px) scale(.4); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--dx, 6px), -34px) scale(1) rotate(25deg); opacity: 0; } }
+/* barras que crecen y bajan */
+.cp-bar { transform-box: fill-box; transform-origin: bottom; animation: cp-bar 2.4s ease-in-out infinite alternate; }
+@keyframes cp-bar { from { transform: scaleY(.35); } to { transform: scaleY(1); } }
+/* monedas que se apilan */
+.cp-stack { transform-box: fill-box; transform-origin: center; animation: cp-stack 2.8s ease-in-out infinite; }
+@keyframes cp-stack { 0%, 15% { transform: translateY(-14px); opacity: 0; } 35%, 85% { transform: none; opacity: 1; } 100% { opacity: 0; } }
+.cp-rise-arrow { animation: cp-rise-arrow 1.6s ease-in-out infinite; }
+@keyframes cp-rise-arrow { 0%, 100% { transform: translateY(4px); opacity: .5; } 50% { transform: translateY(-4px); opacity: 1; } }
+.cp-blink { animation: cp-blink 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes cp-blink { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: .4; } }
+
 /* Nombre CUTTERPAY con brillo que recorre las letras */
 .cp-wordmark-shine {
   background: linear-gradient(100deg, #F4F2FF 0%, #F4F2FF 35%, #FF6FB5 45%, #C94BE0 50%, #8A6BFF 55%, #F4F2FF 65%, #F4F2FF 100%);

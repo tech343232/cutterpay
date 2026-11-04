@@ -9,6 +9,7 @@ import { Skeleton, Change } from '@/components/ui/Feedback'
 import { CoinIcon } from '@/components/ui/Misc'
 import { Sparkline } from '@/components/charts/Sparkline'
 import { AuthShowcase } from '@/components/motion/AuthShowcase'
+import { Personas } from '@/components/landing/Personas'
 import { useMarket } from '@/hooks/useMarket'
 import { usd, qty } from '@/lib/format'
 
@@ -205,6 +206,9 @@ export default function Landing() {
                 })}
           </div>
         </section>
+
+        {/* ---------- Para quién es ---------- */}
+        <Personas />
 
         {/* ---------- El problema ---------- */}
         <section className="grid items-center gap-10 py-16 lg:grid-cols-2">
