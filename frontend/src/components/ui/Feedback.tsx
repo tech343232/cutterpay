@@ -52,7 +52,7 @@ export function Badge({ tone = 'muted', children, className }: { tone?: Tone; ch
 export function Change({ value, className }: { value: number; className?: string }) {
   const up = value >= 0
   return (
-    <span className={cn('tabular inline-flex items-center gap-0.5 font-semibold', up ? 'text-ok' : 'text-bad', className)}>
+    <span className={cn('tabular inline-flex items-center gap-0.5 whitespace-nowrap font-semibold', up ? 'text-ok' : 'text-bad', className)}>
       {up ? '▲' : '▼'} {Math.abs(value).toFixed(2)}%
     </span>
   )

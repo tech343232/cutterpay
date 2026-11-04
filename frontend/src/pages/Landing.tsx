@@ -27,8 +27,8 @@ const ABOUT: Record<string, { text: string; moves: string; tone: string }> = {
     moves: 'Se mueve más',
     tone: 'text-warn border-warn/30 bg-warn/10',
   },
-  SOL: {
-    text: 'Una de las redes más rápidas y baratas del mundo. Su moneda, SOL, se usa para pagos y miles de aplicaciones, y es de las que más ha crecido en los últimos años.',
+  DOGE: {
+    text: 'Nació en 2013 como una broma con la imagen de un perro y hoy es de las más populares del mundo. Cada moneda cuesta centavos: con $1 ya tienes varias.',
     moves: 'Se mueve mucho',
     tone: 'text-bad border-bad/30 bg-bad/10',
   },
@@ -50,7 +50,7 @@ const BENEFITS = [
 
 const STEPS = [
   { icon: UserPlus, title: 'Crea tu cuenta', text: 'En un minuto, con tu nombre, correo y contraseña. Recibes $1,000 de prueba.' },
-  { icon: MousePointerClick, title: 'Elige tu moneda', text: 'Bitcoin, Ethereum o Solana. Escribe cuánto quieres en dólares y confirma.' },
+  { icon: MousePointerClick, title: 'Elige tu moneda', text: 'Bitcoin, Ethereum o Dogecoin. Escribe cuánto quieres en dólares y confirma.' },
   { icon: TrendingUp, title: 'Mira cómo se mueve', text: 'Sigue su precio en vivo. Vende cuando quieras y el dinero vuelve a tu saldo.' },
 ]
 
@@ -94,7 +94,7 @@ export default function Landing() {
         </header>
 
         {/* ---------- Héroe ---------- */}
-        <section className="grid items-center gap-12 py-10 lg:grid-cols-[1.05fr_.95fr] lg:py-16">
+        <section className="grid items-center gap-12 py-10 lg:grid-cols-[1.05fr_.95fr] lg:items-start lg:gap-16 lg:pb-16 lg:pt-8">
           <motion.div initial={{ y: 18 }} animate={{ y: 0 }} transition={{ duration: 0.6 }} className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
             {/* Logo grande solo en celular: lo primero que se ve */}
             <div className="cp-pop-in flex flex-col items-center gap-3 lg:hidden">
@@ -107,10 +107,10 @@ export default function Landing() {
               <span className="flex -space-x-2">
                 {coins.map((c) => <span key={c.symbol} className="rounded-full ring-2 ring-bg"><CoinIcon symbol={c.symbol} color={c.color} size={26} /></span>)}
               </span>
-              <span className="font-semibold">Bitcoin · Ethereum · Solana</span>
+              <span className="font-semibold">Bitcoin · Ethereum · Dogecoin</span>
             </div>
             <p className="-mt-2 max-w-md text-base font-semibold text-fg/90">
-              Las 3 monedas digitales más conocidas del mundo. <span className="text-ok">Empieza a invertir desde solo $1.</span>
+              Tres de las monedas digitales más populares del mundo. <span className="text-ok">Empieza a invertir desde solo $1.</span>
             </p>
             <h1 className="text-[2.5rem] font-extrabold leading-[1.05] sm:text-6xl lg:text-7xl">
               Haz crecer tu dinero <span className="text-aurora">así de sencillo</span>
@@ -133,9 +133,30 @@ export default function Landing() {
                 <li key={t} className="flex items-center gap-1.5"><Check className="h-4 w-4 text-ok" /> {t}</li>
               ))}
             </ul>
+
+            {/* Precios en vivo (en PC rellena la columna y da sensación de plataforma real) */}
+            <div className="hidden w-full max-w-xl rounded-3xl border border-line bg-surface/70 p-2 backdrop-blur lg:block">
+              <div className="flex items-center justify-between px-3 pb-2 pt-1 text-xs font-semibold uppercase tracking-wider text-muted">
+                <span>Mercado en vivo</span>
+                <span className="flex items-center gap-1.5 text-ok"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ok" /> se actualiza cada 5 s</span>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {coins.map((c) => (
+                  <Link key={c.symbol} to="/registro" className="group rounded-2xl bg-bg/60 p-3 transition hover:bg-surface2">
+                    <div className="flex items-center gap-2">
+                      <CoinIcon symbol={c.symbol} color={c.color} size={26} />
+                      <span className="font-semibold">{c.symbol}</span>
+                      <Change value={c.change24h} className="ml-auto text-xs" />
+                    </div>
+                    <p key={c.price} className="tabular mt-2 animate-flash rounded-md font-display text-lg font-bold">{usd(c.price, { price: true })}</p>
+                    <Sparkline data={c.spark} width={140} height={28} className="mt-1 h-7 w-full" />
+                  </Link>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
-          <motion.div initial={{ scale: 0.96 }} animate={{ scale: 1 }} transition={{ duration: 0.7, delay: 0.15 }} className="relative mx-auto w-full max-w-md">
+          <motion.div initial={{ scale: 0.96 }} animate={{ scale: 1 }} transition={{ duration: 0.7, delay: 0.15 }} className="relative mx-auto w-full max-w-md lg:mt-2">
             <div className="relative rounded-4xl bg-surface/85 p-6 shadow-card backdrop-blur">
               <span className="cp-glow-ring" />
               <AuthShowcase />
@@ -313,15 +334,47 @@ export default function Landing() {
           <div className="relative flex flex-col items-center gap-5">
             <LogoIcon size={72} animated glow />
             <h2 className="max-w-2xl text-3xl font-bold sm:text-5xl">Tu primera moneda digital está a un minuto</h2>
-            <p className="max-w-md text-muted">Crea tu cuenta, recibe $1,000 de prueba y compra Bitcoin, Ethereum o Solana en tres pasos.</p>
+            <p className="max-w-md text-muted">Crea tu cuenta, recibe $1,000 de prueba y compra Bitcoin, Ethereum o Dogecoin en tres pasos.</p>
             <Link to="/registro">
               <Button size="lg">Crear mi cuenta gratis <ArrowRight className="h-5 w-5" /></Button>
             </Link>
           </div>
         </section>
 
-        <footer className="border-t border-line py-6 text-center text-xs text-muted">
-          CUTTERPAY · Proyecto académico de Desarrollo Web, Universidad Mariano Gálvez de Guatemala. Saldos y precios de práctica.
+        <footer className="mt-4 border-t border-line pb-10 pt-10">
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-8 text-center md:grid-cols-[1.2fr_1fr_.8fr] md:text-left">
+            {/* Proyecto */}
+            <div className="flex flex-col items-center gap-3 md:items-start">
+              <Logo size={36} />
+              <p className="max-w-xs text-sm text-muted">Simulador de Compra y Venta de Criptomonedas. Haz crecer tu dinero así de sencillo con Bitcoin, Ethereum y Dogecoin.</p>
+            </div>
+            {/* Créditos */}
+            <div className="flex flex-col items-center gap-3 md:items-start">
+              <p className="text-xs font-bold uppercase tracking-wider text-primary">Creado por</p>
+              <div className="flex items-center gap-3">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-aurora font-display text-lg font-bold text-white">S</span>
+                <div className="text-left">
+                  <p className="font-display text-lg font-bold leading-tight">Sofía del Carmen Ramírez Sagastume</p>
+                  <p className="text-sm text-muted">Creadora de CUTTERPAY</p>
+                </div>
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-primary">Trabajo de</p>
+              <p className="text-sm text-fg/90">
+                Proyecto Final · Desarrollo Web
+                <span className="block text-muted">Facultad de Ingeniería · Universidad Mariano Gálvez de Guatemala</span>
+              </p>
+            </div>
+            {/* Accesos */}
+            <div className="flex flex-col items-center gap-3 md:items-start">
+              <p className="text-xs font-bold uppercase tracking-wider text-primary">Empieza hoy</p>
+              <Link to="/registro" className="text-sm font-semibold text-fg hover:text-primary">Crear mi cuenta gratis</Link>
+              <Link to="/login" className="text-sm font-semibold text-fg hover:text-primary">Iniciar sesión</Link>
+            </div>
+          </div>
+          <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-line pt-6 text-xs text-muted md:flex-row">
+            <span>© {new Date().getFullYear()} CUTTERPAY · Simulador de Compra y Venta de Criptomonedas</span>
+            <span>Saldos y precios de práctica, con fines educativos.</span>
+          </div>
         </footer>
       </div>
     </div>

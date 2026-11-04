@@ -75,7 +75,7 @@ export default function History() {
               { value: '', label: 'Todas' },
               { value: 'BTC', label: 'Bitcoin' },
               { value: 'ETH', label: 'Ethereum' },
-              { value: 'SOL', label: 'Solana' },
+              { value: 'DOGE', label: 'Dogecoin' },
             ]}
           />
         </div>

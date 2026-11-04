@@ -17,7 +17,7 @@ function mulberry32(a) {
 export const COINS = [
   { name: 'Bitcoin', symbol: 'BTC', color: '#F7931A', base: 68420.5, vol: 0.004 },
   { name: 'Ethereum', symbol: 'ETH', color: '#627EEA', base: 3512.8, vol: 0.006 },
-  { name: 'Solana', symbol: 'SOL', color: '#9945FF', base: 152.3, vol: 0.009 },
+  { name: 'Dogecoin', symbol: 'DOGE', color: '#C2A633', base: 0.1642, vol: 0.012 },
 ];
 
 export const FUNDS = [
@@ -156,7 +156,7 @@ export async function seed(db) {
       doTrade('compra', 'BTC', 0.004, now - 2.6 * DAY);
       doTrade('compra', 'ETH', 0.06, now - 2.1 * DAY);
       doTrade('venta', 'BTC', 0.0015, now - 1.2 * DAY);
-      doTrade('compra', 'SOL', 0.8, now - 0.7 * DAY);
+      doTrade('compra', 'DOGE', 700, now - 0.7 * DAY);
       doTrade('venta', 'ETH', 0.02, now - 0.3 * DAY);
     } else {
       const times = Array.from({ length: u.trades }, () => created + rand() * (now - created - 3600000)).sort((a, b) => a - b);

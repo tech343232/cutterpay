@@ -61,7 +61,7 @@ function SceneGift() {
 const COINS = [
   { name: 'Bitcoin', symbol: 'BTC', glyph: '₿', color: '#F7931A', price: '$68,420' },
   { name: 'Ethereum', symbol: 'ETH', glyph: 'Ξ', color: '#627EEA', price: '$3,512' },
-  { name: 'Solana', symbol: 'SOL', glyph: '◎', color: '#9945FF', price: '$152' },
+  { name: 'Dogecoin', symbol: 'DOGE', glyph: 'Ð', color: '#C2A633', price: '$0.16' },
 ]
 
 function CoinDot({ c, size = 34 }: { c: (typeof COINS)[number]; size?: number }) {

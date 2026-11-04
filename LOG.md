@@ -14,7 +14,7 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ### Diseño y textos
 - **Siempre usar SVG propios animados con CSS** (trazos que se dibujan con `pathLength=1` + `stroke-dashoffset`, `transform-box: fill-box` para escalar partes). Degradados de trazos finos con `gradientUnits="userSpaceOnUse"`.
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
-- **CUTTERPAY es un simulador de monedas digitales (Bitcoin, Ethereum, Solana; saldo de prueba $1,000)** según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
+- **CUTTERPAY es un simulador de monedas digitales con las 3 del PDF: Bitcoin, Ethereum y Dogecoin (saldo de prueba $1,000)**. Lo que pide el PDF se respeta tal cual; la propuesta propia va en la forma (promesa, perfiles, diseño), no en cambiar requisitos según el PDF del curso. Los fondos de ahorro son una opción secundaria dentro de la app; nunca protagonistas de la landing.
 - **Ningún párrafo termina con 1 o 2 palabras solas en la última línea.** Títulos con `text-wrap: balance`, párrafos con `text-wrap: pretty` (global en `index.css`). Si un texto sigue quedando cojo, se reescribe más corto. *(pedido del usuario, YODO)*
 - **Todo lo que ve el usuario se escribe para principiantes**: se habla del resultado («ganas $7.25 por cada $100»), no de lo técnico. Lo técnico se queda en este log y en el código. *(O.T.I.S)*
 - **Los encabezados muestran solo el nombre**; la explicación va en un «?» (`components/ui/Help.tsx`). *(SOHO)*
@@ -35,6 +35,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Respetar el PDF (Dogecoin), héroe sin huecos en PC y créditos
+- Pedido: volver a Dogecoin porque así lo dice el PDF (la propuesta va en la forma, no en cambiar requisitos); quitar el espacio vacío del héroe en PC para que se vea sofisticado; en el pie decir quién lo creó (Sofía), de qué trabajo es, la universidad y el nombre del proyecto.
+- Entregado: BTC, ETH y DOGE otra vez (bases local y Neon regeneradas); héroe alineado arriba con fila «Mercado en vivo» en PC; pie con proyecto, «Creado por Sofía del Carmen Ramírez Sagastume», «Proyecto Final · Desarrollo Web · Facultad de Ingeniería · Universidad Mariano Gálvez de Guatemala» y accesos.
+- Pendiente: nada.
 
 ### 2026-11-03 · ¿Para quién es CUTTERPAY? (3 perfiles)
 - Pedido: mostrar para quién es ideal CUTTERPAY con 3 perfiles (profesional cansado de depender de su sueldo, independiente que quiere otra fuente de ingresos, dueño de negocio que quiere invertir sus ganancias), 3 dolores de cada uno desde el ángulo de nuevas fuentes de ingreso y dinero estancado; usar SVG animados con CSS en todo.
