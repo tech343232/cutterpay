@@ -12,6 +12,8 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 ## Reglas aprendidas
 
 ### Diseño y textos
+- **Textos neutros en género** para el usuario («Te damos la bienvenida», no «Bienvenida/o»).
+- **Íconos que no confunden**: acciones generales (comprar) con íconos generales (bolsa), nunca el logo de una moneda específica.
 - **Ningún texto plano**: base en gris (`text-muted`), lo importante en **negrita blanca** y la frase protagonista con `.cp-mark` (subrayado degradado). Va en la línea de YODO: «énfasis en negrita + subrayado degradado».
 - **Siempre usar SVG propios animados con CSS** (trazos que se dibujan con `pathLength=1` + `stroke-dashoffset`, `transform-box: fill-box` para escalar partes). Degradados de trazos finos con `gradientUnits="userSpaceOnUse"`.
 - **Pensado para personas de 40+ en celular**: letra base 17.5 px en pantallas ≤ 640 px, nada menor a 13 px, gris secundario `186 180 210`, botones de 56 px de alto. Nunca bajar estos tamaños.
@@ -36,6 +38,11 @@ Aquí se anota cada petición y cada error del proyecto, por qué pasó y cómo 
 - **Clases de Tailwind solo de la escala** (`/10`, `/15`, `h-12`, `h-14`); valores fuera de escala no generan CSS.
 
 ## Peticiones
+
+### 2026-11-03 · Comprar: primero qué moneda, guía de primera compra e íconos claros
+- Pedido: al tocar «Comprar monedas digitales» debe preguntar qué moneda y cuánto; todo pensado para principiantes y para crear hábito; guía (onboarding) la primera vez para comprar su primera cripto; el botón de comprar no debe llevar el ícono de Bitcoin para no confundir.
+- Entregado: paso «¿Qué moneda quieres comprar?» dentro del checkout (explicación simple, «Recomendada para empezar», cuánto se mueve, cambiar moneda); guía de 4 pasos (bienvenida → qué es una moneda digital → elige → con cuánto empiezas) que termina en la compra real con $10/$25/$50 y mensaje «¡Compraste tu primera moneda digital! Vuelve mañana…»; se muestra una sola vez (columna `onboarding_completado`, demo ya marcadas); íconos: bolsa de compras en el botón y monedas en «En cripto».
+- Pendiente: nada.
 
 ### 2026-11-03 · Textos con negritas/subrayado y CTA del pie llamativo
 - Pedido: el «Crear cuenta» del pie debe verse llamativo; los textos no deben ser planos: negritas, subrayado y contraste blanco/gris para dar protagonismo.

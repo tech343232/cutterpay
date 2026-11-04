@@ -20,4 +20,10 @@ router.post('/dpi', validate(dpiSchema), async (req, res) => {
   res.json({ ok: true, hasDpi: true });
 });
 
+// La guía de bienvenida se muestra una sola vez
+router.post('/onboarding', async (req, res) => {
+  await query(`UPDATE usuarios SET onboarding_completado = TRUE WHERE id = $1`, [req.user.id]);
+  res.json({ ok: true });
+});
+
 export default router;

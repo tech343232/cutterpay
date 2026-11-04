@@ -25,7 +25,7 @@ const authLimiter = rateLimit({
   message: { error: 'Demasiadas solicitudes desde tu red. Espera unos minutos e intenta de nuevo.' },
 });
 
-const publicUser = (u) => ({ id: u.id, name: u.nombre, email: u.correo, role: u.rol, status: u.estado, hasDpi: Boolean(u.dpi) });
+const publicUser = (u) => ({ id: u.id, name: u.nombre, email: u.correo, role: u.rol, status: u.estado, hasDpi: Boolean(u.dpi), onboarded: Boolean(u.onboarding_completado) });
 
 router.post('/registro', authLimiter, validate(registerSchema), async (req, res) => {
   const { name, email, password } = req.body;

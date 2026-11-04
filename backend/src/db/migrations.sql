@@ -3,6 +3,11 @@
 -- Correo verificado con código
 ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS correo_verificado BOOLEAN NOT NULL DEFAULT FALSE;
 
+-- Guía de bienvenida (primera compra) ya vista
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS onboarding_completado BOOLEAN NOT NULL DEFAULT FALSE;
+-- Las cuentas de demostración ya conocen la plataforma
+UPDATE usuarios SET onboarding_completado = TRUE WHERE correo LIKE '%@cutterpay.com' AND onboarding_completado = FALSE;
+
 -- Un DPI solo puede pertenecer a una cuenta
 CREATE UNIQUE INDEX IF NOT EXISTS ux_usuarios_dpi ON usuarios (dpi) WHERE dpi IS NOT NULL;
 

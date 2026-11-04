@@ -23,6 +23,8 @@ interface AuthValue {
   logout: () => void
   /** Marca que ya verificó su identidad con DPI */
   markDpi: () => void
+  /** Marca que ya vio la guía de bienvenida */
+  markOnboarded: () => void
 }
 
 const AuthContext = createContext<AuthValue | null>(null)
@@ -71,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const markDpi = useCallback(() => setUser((u) => (u ? { ...u, hasDpi: true } : u)), [])
+  const markOnboarded = useCallback(() => setUser((u) => (u ? { ...u, onboarded: true } : u)), [])
 
   const logout = useCallback(() => {
     tokenStore.clear()
@@ -78,7 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus('anon')
   }, [])
 
-  const value = useMemo(() => ({ user, status, endedReason, login, register, verify, logout, markDpi }), [user, status, endedReason, login, register, verify, logout, markDpi])
+  const value = useMemo(() => ({ user, status, endedReason, login, register, verify, logout, markDpi, markOnboarded }), [user, status, endedReason, login, register, verify, logout, markDpi, markOnboarded])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

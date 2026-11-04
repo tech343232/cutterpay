@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, PiggyBank, Bitcoin, Receipt, Wallet as WalletIcon, Sparkles } from 'lucide-react'
+import { ArrowRight, PiggyBank, ShoppingBag, Coins, Receipt, Wallet as WalletIcon, Sparkles } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { useMarket, useWallet } from '@/hooks/useMarket'
 import { useApi } from '@/hooks/useApi'
@@ -25,7 +25,7 @@ export default function Dashboard() {
   const wallet = useWallet()
   const [symbol, setSymbol] = useState('BTC')
   const [range, setRange] = useState<Range>('24h')
-  const [flow, setFlow] = useState<{ mode: FlowMode; target: FlowTarget; available: number } | null>(null)
+  const [flow, setFlow] = useState<{ mode: FlowMode; target: FlowTarget | null; available: number } | null>(null)
   const history = useApi<{ points: PricePoint[] }>(`/mercado/${symbol}/historial?rango=${range}`, { pollMs: 15000 })
   const recent = useApi<Page<Transaction>>('/transacciones?pageSize=5', { refreshOn: ['cp:wallet-changed'] })
 
@@ -35,6 +35,8 @@ export default function Dashboard() {
     const c = market.coins.find((x) => x.symbol === s)
     if (c) setFlow({ mode: 'crypto-buy', target: { key: c.symbol, name: c.name, color: c.color, price: c.price }, available: w?.balance ?? 0 })
   }
+  // "Comprar monedas digitales": primero pregunta qué moneda y luego cuánto
+  const pick = () => setFlow({ mode: 'crypto-buy', target: null, available: w?.balance ?? 0 })
   const fixedPart = w ? w.balance + w.cryptoValue : 0
 
   return (
@@ -59,8 +61,8 @@ export default function Dashboard() {
             )}
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button size="lg" onClick={() => buy('BTC')} disabled={!w || !market.coins.length}>
-              <Bitcoin className="h-5 w-5" /> Comprar monedas digitales
+            <Button size="lg" onClick={pick} disabled={!w || !market.coins.length}>
+              <ShoppingBag className="h-5 w-5" /> Comprar monedas digitales
             </Button>
             <Link to="/app/fondos">
               <Button size="lg" variant="secondary"><PiggyBank className="h-5 w-5" /> Fondos de ahorro</Button>
@@ -82,7 +84,7 @@ export default function Dashboard() {
             </Link>
             <Link to="/app/portafolio" className="rounded-3xl border border-line bg-bg/50 p-4 transition hover:border-primary/40">
               <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
-                <Bitcoin className="h-3.5 w-3.5" /> En cripto
+                <Coins className="h-3.5 w-3.5" /> En cripto
                 <Help title="Cripto" align="right">Su precio sube y baja durante el día. Puedes ganar más que en un fondo, pero también perder.</Help>
               </p>
               <p className="tabular mt-1 font-display text-2xl font-bold">{usd(w.cryptoValue)}</p>
@@ -137,13 +139,22 @@ export default function Dashboard() {
         ) : recent.loading || !recent.data ? (
           <Skeleton className="h-40" />
         ) : recent.data.items.length === 0 ? (
-          <EmptyState icon={<Receipt className="h-6 w-6" />} title="Todavía no compras cripto" text="Puedes empezar con $10. Toca «Comprar monedas digitales» y sigue los 3 pasos." />
+          <EmptyState icon={<Receipt className="h-6 w-6" />} title="Todavía no compras cripto" text="Puedes empezar con $10. Toca «Comprar monedas digitales», elige una moneda y sigue los pasos." />
         ) : (
           <TransactionList items={recent.data.items} dense />
         )}
       </Card>
 
-      {flow && <MoneyFlow open mode={flow.mode} target={flow.target} available={flow.available} onClose={() => setFlow(null)} />}
+      {flow && (
+        <MoneyFlow
+          open
+          mode={flow.mode}
+          target={flow.target}
+          available={flow.available}
+          pickFrom={flow.target ? undefined : market.coins.map((c) => ({ key: c.symbol, name: c.name, color: c.color, price: c.price }))}
+          onClose={() => setFlow(null)}
+        />
+      )}
     </div>
   )
 }

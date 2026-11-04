@@ -18,7 +18,7 @@ export async function requireAuth(req, _res, next) {
   } catch (e) {
     throw new HttpError(401, e.name === 'TokenExpiredError' ? 'Tu sesión expiró. Inicia sesión otra vez.' : 'Inicia sesión para continuar.');
   }
-  const [user] = await query(`SELECT id, nombre, correo, rol, estado, dpi FROM usuarios WHERE id = $1`, [payload.sub]);
+  const [user] = await query(`SELECT id, nombre, correo, rol, estado, dpi, onboarding_completado FROM usuarios WHERE id = $1`, [payload.sub]);
   if (!user) throw new HttpError(401, 'Inicia sesión para continuar.');
   if (user.estado === 'suspendido') throw forbidden('Tu cuenta está suspendida. Contacta al administrador.', { code: 'ACCOUNT_SUSPENDED' });
   if (user.estado === 'baja') throw forbidden('Esta cuenta fue dada de baja.', { code: 'ACCOUNT_CLOSED' });

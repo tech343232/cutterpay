@@ -13,6 +13,9 @@ import { Confetti } from './Confetti'
 import { VerifyCode, type Challenge } from '@/components/security/VerifyCode'
 import { DpiStep } from '@/components/security/DpiStep'
 import { useAuth } from '@/context/AuthContext'
+import { COIN_INFO } from '@/lib/coins'
+import { LogoIcon } from '@/components/brand/Logo'
+import { Badge } from '@/components/ui/Feedback'
 
 export type FlowMode = 'fund-invest' | 'fund-withdraw' | 'crypto-buy' | 'crypto-sell'
 
@@ -36,6 +39,14 @@ interface Props {
   available: number
   /** Tasa de la cuenta de ahorro del banco, para comparar */
   bankRate?: number
+  /** Si se pasa (y no hay target), primero pregunta qué moneda comprar */
+  pickFrom?: FlowTarget[]
+  /** Monto con el que arranca el paso "¿Cuánto?" */
+  initialAmount?: number
+  /** Primera compra de la persona (mensaje especial al final) */
+  firstTime?: boolean
+  /** Se llama cuando la operación termina bien */
+  onDone?: () => void
 }
 
 const STEPS = ['Monto', 'Revisa', 'Código', 'Listo']
@@ -49,7 +60,7 @@ const COPY: Record<FlowMode, { title: (n: string) => string; cta: string; confir
 
 const isOut = (m: FlowMode) => m === 'fund-withdraw' || m === 'crypto-sell'
 
-export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0.75 }: Props) {
+export function MoneyFlow({ open, onClose, mode, target: targetProp, available, bankRate = 0.75, pickFrom, initialAmount, firstTime, onDone }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -61,6 +72,8 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
   const [serverError, setServerError] = useState<string | null>(null)
   const [result, setResult] = useState<{ amount: number; detail: ReactNode } | null>(null)
   const [challenge, setChallenge] = useState<Challenge | null>(null)
+  const [chosen, setChosen] = useState<FlowTarget | null>(targetProp)
+  const target = chosen
 
   useEffect(() => {
     const d = ref.current
@@ -69,14 +82,15 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
     if (!open && d.open) d.close()
     if (open) {
       setStep(0)
-      setRaw(isOut(mode) ? '' : '100')
+      setChosen(targetProp)
+      setRaw(initialAmount != null ? String(initialAmount) : isOut(mode) ? '' : '100')
       setAll(false)
       setTouched(false)
       setServerError(null)
       setResult(null)
       setChallenge(null)
     }
-  }, [open, mode])
+  }, [open, mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const c = COPY[mode]
   const amount = all ? Math.floor(available * 100) / 100 : Number(raw.replace(',', '.'))
@@ -91,7 +105,70 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
     return null
   }, [raw, all, amount, available, mode, target])
 
-  if (!target) return <dialog ref={ref} className="hidden" />
+  if (!target && !pickFrom) return <dialog ref={ref} className="hidden" />
+
+  const labels = pickFrom ? ['Moneda', ...STEPS] : STEPS
+  const current = target ? step + (pickFrom ? 1 : 0) : 0
+  const Stepper = (
+    <ol className="flex items-center gap-1.5" aria-label="Pasos">
+      {labels.map((s, i) => (
+        <li key={s} className="flex flex-1 items-center gap-1.5">
+          <span className={cn('grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold transition', i < current ? 'bg-ok text-bg' : i === current ? 'bg-aurora text-white' : 'bg-surface2 text-muted')}>
+            {i < current ? <Check className="h-4 w-4" /> : i + 1}
+          </span>
+          {i === current && <span className="whitespace-nowrap text-sm font-semibold text-fg">{s}</span>}
+          {i < labels.length - 1 && <span className={cn('h-px flex-1', i < current ? 'bg-ok' : 'bg-line')} />}
+        </li>
+      ))}
+    </ol>
+  )
+  const dialogClass = 'm-0 mt-auto w-full max-w-none overflow-visible rounded-t-4xl border border-line bg-surface p-0 text-fg shadow-card backdrop:bg-black/70 backdrop:backdrop-blur-sm sm:m-auto sm:w-[min(94vw,480px)] sm:rounded-4xl'
+
+  if (!target) {
+    return (
+      <dialog ref={ref} onCancel={(e) => { e.preventDefault(); onClose() }} onClick={(e) => { if (e.target === ref.current) onClose() }} className={dialogClass}>
+        <div className="relative flex max-h-[92vh] flex-col gap-5 overflow-y-auto p-6" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <LogoIcon size={38} animated />
+              <h2 className="text-xl font-semibold">Comprar monedas digitales</h2>
+            </div>
+            <button onClick={onClose} className="rounded-xl p-1.5 text-muted hover:bg-surface2 hover:text-fg" aria-label="Cerrar"><X className="h-5 w-5" /></button>
+          </div>
+          {Stepper}
+          <div className="flex flex-col gap-3">
+            <p className="font-display text-2xl font-bold">¿Qué moneda quieres comprar?</p>
+            <p className="-mt-1 text-sm text-muted">Toca una. Puedes empezar <b>desde $1</b> y comprar otras después.</p>
+            {pickFrom!.map((c, i) => {
+              const info = COIN_INFO[c.key]
+              return (
+                <motion.button
+                  key={c.key}
+                  type="button"
+                  initial={{ y: 10 }}
+                  animate={{ y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                  onClick={() => setChosen(c)}
+                  className="group flex w-full items-center gap-4 rounded-3xl border border-line bg-bg/50 p-4 text-left transition hover:-translate-y-0.5 hover:border-primary/60 hover:bg-surface2"
+                >
+                  <CoinIcon symbol={c.key} color={c.color} size={46} />
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="font-display text-lg font-bold">{c.name}</span>
+                      {info?.recommended && <Badge tone="primary">Recomendada para empezar</Badge>}
+                    </span>
+                    {info && <span className="block text-sm text-muted">{info.short}</span>}
+                    {info && <span className={cn('mt-1 inline-block text-xs font-bold', info.tone === 'ok' ? 'text-ok' : info.tone === 'warn' ? 'text-warn' : 'text-bad')}>{info.moves}</span>}
+                  </span>
+                  <span className="tabular shrink-0 text-right font-display font-bold">{c.price ? usd(c.price, { price: true }) : ''}</span>
+                </motion.button>
+              )
+            })}
+          </div>
+        </div>
+      </dialog>
+    )
+  }
 
   const yearly = target.rate ? amount * (target.rate / 100) : 0
   const bankYearly = amount * (bankRate / 100)
@@ -161,8 +238,12 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
             <>Vendiste {fmtQty(r.transaction.quantity)} {target.key}. {r.transaction.gain != null && <>Resultado: <b className={r.transaction.gain >= 0 ? 'text-ok' : 'text-bad'}>{usd(r.transaction.gain)}</b>.</>}</>
           )
       }
+      if (firstTime && mode === 'crypto-buy') {
+        detail = <>{detail} <b>Vuelve mañana</b> para ver cómo se movió tu inversión.</>
+      }
       setResult({ amount: final, detail })
       setStep(3)
+      onDone?.()
       playSuccess()
       emitWalletChanged()
     }
@@ -180,7 +261,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
       onClick={(e) => {
         if (e.target === ref.current && !sending) onClose()
       }}
-      className="m-0 mt-auto w-full max-w-none overflow-visible rounded-t-4xl border border-line bg-surface p-0 text-fg shadow-card backdrop:bg-black/70 backdrop:backdrop-blur-sm sm:m-auto sm:w-[min(94vw,460px)] sm:rounded-4xl"
+      className={dialogClass}
     >
       <div className="relative flex max-h-[92vh] flex-col gap-5 overflow-y-auto p-6" style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}>
         {/* Encabezado */}
@@ -201,22 +282,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
         </div>
 
         {/* Pasos (estilo SOHO: número, y ✓ al completar) */}
-        <ol className="flex items-center gap-2" aria-label="Pasos">
-          {STEPS.map((s, i) => (
-            <li key={s} className="flex flex-1 items-center gap-2">
-              <span
-                className={cn(
-                  'grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-bold transition',
-                  i < step ? 'bg-ok text-bg' : i === step ? 'bg-aurora text-white' : 'bg-surface2 text-muted',
-                )}
-              >
-                {i < step ? <Check className="h-4 w-4" /> : i + 1}
-              </span>
-              <span className={cn('text-sm font-semibold', i === step ? 'text-fg' : 'text-muted')}>{s}</span>
-              {i < STEPS.length - 1 && <span className={cn('h-px flex-1', i < step ? 'bg-ok' : 'bg-line')} />}
-            </li>
-          ))}
-        </ol>
+        {Stepper}
 
         {mode === 'fund-withdraw' && !user?.hasDpi ? (
           <DpiStep onDone={() => setStep(0)} />
@@ -224,9 +290,16 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
         <AnimatePresence mode="wait">
           {step === 0 && (
             <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-4">
-              <label htmlFor="flow-amount" className="text-sm font-semibold text-muted">
-                {isOut(mode) ? '¿Cuánto quieres pasar a tu saldo?' : '¿Cuánto quieres invertir?'}
-              </label>
+              <div className="flex items-center justify-between gap-2">
+                <label htmlFor="flow-amount" className="text-sm font-semibold text-muted">
+                  {isOut(mode) ? '¿Cuánto quieres pasar a tu saldo?' : '¿Cuánto quieres invertir?'}
+                </label>
+                {pickFrom && (
+                  <button type="button" onClick={() => setChosen(null)} className="text-sm font-semibold text-primary hover:underline">
+                    Cambiar moneda
+                  </button>
+                )}
+              </div>
               <div className={cn('flex items-center rounded-3xl border bg-bg/60 px-5 py-3 transition focus-within:border-primary', shownError ? 'border-bad/70' : 'border-line')}>
                 <span className="font-display text-4xl font-bold text-muted">$</span>
                 <input
@@ -372,7 +445,7 @@ export function MoneyFlow({ open, onClose, mode, target, available, bankRate = 0
                 <Check className="h-10 w-10" strokeWidth={3} />
               </motion.span>
               <div>
-                <p className="font-display text-2xl font-bold">{c.done}</p>
+                <p className="font-display text-2xl font-bold">{firstTime && mode === 'crypto-buy' ? '¡Compraste tu primera moneda digital!' : c.done}</p>
                 <p className="tabular mt-1 font-display text-4xl font-extrabold text-aurora">{usd(result.amount)}</p>
               </div>
               <p className="max-w-xs text-sm text-muted">{result.detail}</p>

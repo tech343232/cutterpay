@@ -9,6 +9,7 @@ import { Logo, LogoIcon } from '@/components/brand/Logo'
 import { usd, firstName } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { WelcomeOverlay } from '@/components/motion/WelcomeOverlay'
+import { FirstBuyGuide } from '@/components/onboarding/FirstBuyGuide'
 
 const USER_NAV = [
   { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
@@ -40,6 +41,7 @@ export function AppShell({ admin = false }: { admin?: boolean }) {
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[260px_1fr]">
       <WelcomeOverlay />
+      {!admin && <FirstBuyGuide />}
       {/* Barra lateral (escritorio) */}
       <aside className="sticky top-0 hidden h-screen flex-col gap-6 border-r border-line bg-surface/60 p-5 backdrop-blur lg:flex">
         <NavLink to={admin ? '/admin' : '/app'} className="px-1"><Logo size={38} /></NavLink>

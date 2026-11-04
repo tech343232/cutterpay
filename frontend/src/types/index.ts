@@ -9,6 +9,7 @@ export interface User {
   role: Role
   status: AccountStatus
   hasDpi?: boolean
+  onboarded?: boolean
 }
 
 export interface Coin {
